@@ -1,0 +1,214 @@
+---
+title: "tidytext_mining"
+author: "Johannes Burgers"
+date: "9/22/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load_libraries}
+library(tidytext)
+library(pdftools)
+library(tidyverse)
+library(epubr)
+library(janeaustenr)
+library(scales)
+```
+
+# Introduction
+
+The Silge and Robinson provided an excellent overview of some basic text mining techniques for working with the `gutenbergr` library. This package is convenient because it allows you to import relatively clean data by virtue of simply looking up the text by author name, genre, or title. The issue is that not all text analysis might go through Gutenberg. For example, you might find some data "in the wild" that you want to analyze. You would have to get it in a workable format in order to do the analysis. As the following brief lesson will show, there's quite a number of trade offs in getting "new" data and processing it, versus using already existing data.
+
+## Use case: Derrida/Fish
+
+In literary studies, one of the most heated debates about and within literary theory is about the use of jargon. Literary studies folks are often accused of using overly complicated language to make a point. The target is usually a man called Jacques Derrida who wrote notoriously difficult books. Yet, it is a matter of some debate if these books contain a lot of jargon. Just because the thought is difficult does not mean the language is. We can test out this assumption by analyzing Derrida relative to other authors, including a man called Stanley Fish who was often at loggerheads with Derrida. Yet, in order to do this we have a basic problem: their texts are not going to be available on Gutenberg. We therefore have to manually find the texts and process them. This can be a huge challenge, especially since digital formats are designed for readability and not interoperability between different formats. Indeed, some are designed **not** to be converted to different formats (i.e. piracy). The proper procedure is to go to the book store, buy the book, guillotine it, pass it through an OCR scanner and clean up the data, but who has the time! More often than not you'll gather textual data by other means. The two most common formats are PDF and epub. There are handy tools for both in R. Unfortunately they cannot clean up the data for you, which is the most challenging task.
+
+### PDFs in R
+
+PDFs in R are handled through the `pdftools` package. The use of the package is fairly simple. Use the command `pdf_text()` to convert any PDF file to a character string. In the folder there is a PDF of Jacques Derrida's *Of Grammatology,* we are going to convert it to a character string.
+
+```{r pdf_text_extraction}
+derrida_text <- pdf_text("Jacques Derrida - Of Grammatology (1998).pdf") 
+```
+
+> Take a look at the `derrida_text` value in the environment window. What do you notice? Are you able to work with this data in tidy format?
+
+Let's try to take this string and unnest it into tokens.
+
+```{r derrida_unnest_one, eval=FALSE}
+derrida_unnest_one <- derrida_text %>% 
+                      unnest_tokens(word, text)
+```
+
+![Computer says no](images/computer-says-no.jpg)\
+That didn't go well.
+
+> **Why didn't it work?**
+
+We can put this into a `data_frame`, which is what tidy text likes by calling the `data_frame` function. We will have to fill in the column names, and how the data should be split up. We know from our environment variable that there are 444 rows in the `derrida_text` character vector. Hence, we can fill in `1:444`.
+
+```{r derrida_df}
+derrida_df <- data_frame(line = 1:444, text=derrida_text)
+```
+
+> **Is this a smart way to go about it?**
+
+If I'm asking the question, then probably not.
+
+Right now, the length of the vector is "hard coded" into the script. If you don't know the length or if it changes for some reason, you'll run into an error. It's best to use a relative reference to get the end of a vector. We can use the function `length()` to determine the number of rows in the character vector.
+
+```{r length}
+length(derrida_text)
+```
+
+Sweet! That works so now let's plug that into the data_frame function.
+
+```{r upgraded_derrida_df}
+derrida_df  <- data_frame(paragraph=1:length(derrida_text), text=derrida_text)
+```
+
+We can take a peek inside the data by clicking on the data file in the environment window.
+
+> **What problem do you see with the data?**
+
+> **Is there an easy fix for this?**
+
+We can come up with a quick solution by setting up a filter to delete the unnecessary lines. There's a couple of ways to go about this. One way requires manipulating the df quite a bit.
+
+```{r derrida_clean}
+derrida_clean <- derrida_df %>% 
+                 group_by(paragraph) %>% #if we group the df by line we notice a curious effect.
+                 unnest_lines(text_by_line, text)
+```
+
+Essentially, by grouping by the variable "paragraph" we create an index of the lines that belong together (i.e. the paragraphs). We can than then label each individual line in the paragraph by creating a new variable and setting it to `row_number()`.
+
+> **Note the count next to each paragraph.**
+
+```{r create_paragraph_line}
+   derrida_clean <- derrida_clean %>%                    
+                    mutate(paragraph_line = row_number()) 
+```
+
+Now we simply filter out any `paragraph_line` greater than one.
+
+```{r filter_first_line}
+derrida_clean <- derrida_clean %>% 
+                 filter(paragraph_line>1)
+```
+
+We can of course put this all together.
+
+```{r cleaning_derrida}
+derrida_clean <- derrida_df %>%
+                 group_by(paragraph) %>%
+                 unnest_lines(text_by_line, text) %>%
+                 mutate(paragraph_line = row_number()) %>%
+                 filter(paragraph_line > 1)
+```
+
+We finally have our data in a format that `tidytext` likes. We can unnest fully and take out all the stop words.
+
+```{r derrida_tidy}
+derrida_tidy <- derrida_clean %>% 
+                unnest_tokens(word, text_by_line) %>% 
+                anti_join(stop_words) %>% 
+                ungroup()
+
+```
+
+That was a fairly minimal cleaning effort and to get a better picture you would need to do quite a bit more. We can leave it there for now.
+
+### Epubs in R
+
+Epubs are a bit different than PDFs in terms of their format. Essentially, while they are stored as one file, they are a collection of related files that give insight into the book. They are preferred precisely because they tend to contain more robust metadata than PDF files. This also makes extracting data slightly trickier.
+
+Like pdftext, epubr has a simple command for reading in an epub file into data \`epub(file= "filename").
+
+```{r importing_data}
+fish_epub <- epub(file = "How to Write a Sentence And How to Read One by Stanley Fish.epub")
+```
+
+Look inside `fish_epub` and see if you can find the text. You'll note that the data frame isn't just a table it also contains another table in one of its cells. This is called a nested table. Conceptually, this can be hard to understand, but all you need to know is that you want to grab this table. You do this by accessing the vector `data` and then fetching the first value within that vector `[[1]]`.
+
+```{r finding_fish}
+fish_df <- fish_epub$data[[1]]
+```
+
+You'll note that the data here looks a lot cleaner than with the Derrida. We can clean up the table by only selecting the part we need. We do this through the `select()` function.
+
+```{r fish_small}
+fish_small <- fish_df %>% 
+              select(text)
+```
+
+Now we just have one column of data. The nice thing about this format is that we can take it and filter out only the text we need relatively easily because all of the formatting is regular. We can filter out only the actual chapters by using the function `str_detect(),` and then we can delete the chapter titles by using a `regular expression`.
+
+```{r fish_filtered}
+fish_filtered <- fish_small %>% 
+                 filter(str_detect(text, "CHAPTER")) %>% 
+                 mutate(text = str_remove_all(text, ".*CHAPTER.*\r?\n")) #This little bit says find the word CHAPTER and delete the entire line.
+```
+
+With our text in order, we can tidy it up and take out all the stop words.
+
+```{r fish_tidy}
+fish_tidy <- fish_filtered %>% 
+             unnest_tokens(word, text) %>% 
+             anti_join(stop_words)
+```
+
+We finally have our data!
+
+We can now run the comparison. We need a "baseline" for understanding linguistic complexity. Since, we've been using Jane Austen, let's use her as a marker for the English language.
+
+```{r austen_tidy}
+austen_tidy <- austen_books() %>% 
+  group_by(book) %>% 
+  mutate(linenumber = row_number(), chapter = cumsum(str_detect(text, regex("^chapter [\\divxlc]",
+                                                 ignore_case = TRUE)))) %>%
+  ungroup() %>% 
+  unnest_tokens(word, text) %>% 
+  anti_join(stop_words)  
+```
+
+### What's the différance?
+
+In theory we could simply plug in the authors and data for the chart that already existed. If only it were that simple! As it turns out, the function tries to resort the columns in a particular way. The only thing you need to know is that Jane Austen needs to be placed last after the `pivot_wider()` function. Modify the code below to suit your own data gathering.
+
+```{r plotting_differance}
+
+frequency <- bind_rows(mutate(derrida_tidy, author = "Jacques Derrida"),
+                       mutate(fish_tidy, author = "Stanley Fish"),
+                       mutate(austen_tidy, author = "Jane Austen"))  %>% 
+   mutate(word = str_extract(word, "[a-z']+")) %>% 
+  count(author, word) %>% 
+    group_by(author) %>% 
+    mutate(proportion = n / sum(n)) %>% 
+  select(-n) %>% 
+  pivot_wider(names_from = author, values_from = proportion) %>% 
+  relocate('Jane Austen', .after = last_col()) %>% 
+  pivot_longer(`Jacques Derrida`:`Stanley Fish`,
+               names_to = "author", values_to = "proportion")
+
+
+# expect a warning about rows with missing values being removed
+ggplot(frequency, aes(x = proportion, y = `Jane Austen`,
+                      color = abs(`Jane Austen` - proportion))) +
+  geom_abline(color = "gray40", lty = 2) +
+  geom_jitter(alpha = 0.1, size = 2.5, width = 0.3, height = 0.3) +
+  geom_text(aes(label = word), check_overlap = TRUE, vjust = 1.5) +
+  scale_x_log10(labels = percent_format()) +
+  scale_y_log10(labels = percent_format()) +
+  scale_color_gradient(limits = c(0, 0.001),
+                       low = "darkslategray4", high = "gray75") +
+  facet_wrap(~author, ncol = 2) +
+  theme(legend.position="none") +
+  labs(y = "Jane Austen", x = NULL)
+
+```
+
+>**What do the results show us? Is Derrida full of jargon?**
