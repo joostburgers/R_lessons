@@ -1,0 +1,259 @@
+---
+title: "Sentiment Analysis"
+author: "Johannes Burgers"
+date: "9/29/2021"
+output: html_document
+---
+
+# Introduction
+
+For this lesson we are going to work as a class to operationalize a set of questions around sentiment analysis. We will be going through the entire process of writing an analysis report by filling in the BLANKS. You will be given code snippets with prompts. You will be asked to complete these to your own specifications as we get dive deeper into the questions. 
+
+## Workflow
+
+We have already spoken about the data science workflow, but it is useful to re-iterate here:
+
+ - Import
+ - Clean
+ - Model
+ - Analyze
+ - Visualize
+ - Publish
+ 
+ Of course, in creating an interactive document you may end up visualizing the data, then analyzing it, modelling it further and visualizing it again. Conceptually, you are doing the same thing: ask a specific question of the data, hypothesize your expected result and then model, analyze, and visualize to confirm or reject your hypothesis. It is important that all data trials are deliberate. If you simply start modelling data on the fly, you might keep getting distracted by ancillary matters. 
+ 
+## Code Structure
+
+In generaly, your markdown documents will have similar sections:
+
+- Load: Load all necessary libraries in the beginning. If you realize you need to load a library later, make this is all done in the same section. This will make it easier to source a problem if it is with a library.
+- Import: You want to import all necessary data in the same section. Again, while this can be somewhat inefficient computationally. It makes your code more legible.
+- Clean: Cleaning should be seen as distinct from modelling. With textual data this mostly involves getting the data into a workable format, and getting rid of any textual artifacts.
+- Model/Analyze: This is the bulk of data science. A lot of time is spent on reshaping the data to give new insights, using the data to generate new data, and, in general, making the data model more complex.
+- Visualize: This is the last step, and is only really productive when you have an expected output. Resist the urge to pepper your document with visualizations. 
+
+
+# Case Study: Science Fiction 
+
+Science fiction, especially in its early days, was a genre heavily dominated by men. Not only were the writers masculine, so were the plot arcs. Presumably, this had to do with the fact that since science fiction was about the rational exploration of the universe, women were disqualified from this genre because they concerned themselves with things that were too frivolous. Yet, in the early 1920s and 1930s, women's writing, either under pseudonym or real name did appear in pulp magazines. Some of these works have survived. The question arises, was this writing by women materially different than that of the men? If so, how? Part of the exclusionary logic of science fiction writing by men, presupposed that women were only concerned with love and relationships, rather than adventure and technology.
+
+## Hypothesis:
+
+There is no difference in male and female science fiction writing wirth regard to relationships or technology.
+
+## Load Libraries
+
+```{r load_libraries}
+library(gutenbergr)
+library(tidytext)
+library(tidyverse)
+
+```
+
+## Import data
+
+Previously, we imported data by calling the `gutenberg_download` function along with a list of the list IDs:
+
+`hgwells <- gutenberg_download(c(35, 36, 5230, 159))`
+
+This is not the most intuitive way to do this.
+
+The `gutenbergr` package also has a `gutenberg_works()` function that lists all of the works in Gutenberg. 
+
+```{r gutenberg_works}
+temp <- gutenberg_works()
+```
+
+We can filter this down by a specific condition in a specific column. The most natural way to do this is author. Since this is a very literal search, the names have to match exactly as they are listed in gutenberg_works(). For example, we can look at the works available by H.P. Lovecraft.
+
+```{r gutenberg_author}
+lovecraft_text <- gutenberg_works(author == "Lovecraft, H. P. (Howard Phillips)")
+```
+
+But this is very literal, and requires knowing that Lovecraft's name is spelled exactly as: Lovecraft, H. P. (Howard Phillips). We can build in some fuzzier matching by returning partial matches. 
+
+```{r gutenberg_author_search}
+lovecraft_filtered <- gutenberg_works() %>% 
+                      filter(str_detect(author, "Lovecraft"))
+```
+
+Once we have the list of works, we can fetch those using `gutenberg_download()`
+
+```{r gutenberg_lovecraft_download}
+lovecraft_download <- lovecraft_filtered %>% 
+                      gutenberg_download(meta_fields = c("title", "author"))
+```
+
+
+Note that we have used the `meta_fields` argument to download additional `meta_data`.
+
+We can, of course, combine all this in one longer function to make the code less verbose. For example, if we wanted to download the works of C.M. Kornbluth we could do so as follows:
+
+```{r gutenberg_kornbluth_download}
+kornbluth_download <- gutenberg_works() %>%
+                        filter(str_detect(author, "Kornbluth")) %>% 
+                      gutenberg_download(meta_fields = c("title", "author"))
+
+```
+
+For good measure, let's also download the work of William Hope Hodgson. Before downloading it let's see what searching for "Hodgson" reveals.
+
+```{r hodgson_download}
+Hodgson <-  gutenberg_works() %>% 
+                filter(str_detect(author, "Hodgson"))
+Hodgson$author
+```
+
+Note that many of the works are not actually William Hope Hodgson. We will have to be more specific.
+
+```{r hodgson_download}
+hodgson_download <-  gutenberg_works() %>% 
+                filter(str_detect(author, "Hodgson, William")) %>% 
+                gutenberg_download(meta_fields = c("title", "author"))
+```
+
+We have downloaded our male corpora. Now we also want to include women. Please download the works of the following women:
+
+- Andre Norton
+- Marion Zimmer Bradley
+- Evelyn Smith
+
+```{r norton_download}
+norton_download <-  gutenberg_works() %>% 
+                filter(str_detect(author, "Norton, Andre")) %>% 
+                gutenberg_download(meta_fields = c("title", "author"))
+```
+
+```{r bradley_download}
+bradley_download <-  gutenberg_works() %>% 
+                filter(str_detect(author, "Bradley, Marion")) %>% 
+                gutenberg_download(meta_fields = c("title", "author"))
+```
+
+```{r smith_download}
+smith_download <-  gutenberg_works() %>% 
+                filter(str_detect(author, "Smith, Evelyn")) %>% 
+                gutenberg_download(meta_fields = c("title", "author"))
+```
+
+## Backing up data
+
+Because Gutenberg can be very fickle, it's usually a good practice to store the downloaded files locally. We can easily write this information into a csv file using the function `write_csv`. You will see a new csv appear in your folder.
+
+```{r backup_data}
+write_csv(lovecraft_download, "lovecraft_download.csv")
+write_csv(kornbluth_download, "kornbluth_download.csv")
+write_csv(hodgson_download, "hodgson_download.csv")
+write_csv(norton_download, "norton_download.csv")
+write_csv(bradley_download, "bradley_download.csv")
+write_csv(smith_download, "smith_download.csv")
+```
+
+## Restoring data
+
+If you want to import the data again, you simply reverse the process. It's generally a good practice to change the name of your variable between export and import.
+
+```{r restore_data}
+lovecraft_import <- read_csv("lovecraft_download.csv")
+kornbluth_import <- read_csv("kornbluth_download.csv")
+hodgson_import <-  read_csv("hodgson_download.csv")
+norton_import <- read_csv("norton_download.csv")
+bradley_import <- read_csv("bradley_download.csv")
+smith_import <- read_csv("smith_download.csv")
+```
+
+## Restoring Data (optional)
+
+If you weren't able to download and write the Gutenberg data, it has been saved here for you.
+
+```{r restore_optional_data}
+lovecraft_import <- read_csv("backup/lovecraft_backup.csv")
+kornbluth_import <- read_csv("backup/kornbluth_backup.csv")
+hodgson_import <-  read_csv("backup/hodgson_backup.csv")
+norton_import <- read_csv("backup/norton_backup.csv")
+bradley_import <- read_csv("backup/bradley_backup.csv")
+smith_import <- read_csv("backup/smith_backup.csv")
+```
+
+## Modelling Data
+
+### Adding Gender
+Now that we have our data in place, we can start adding complexity to the data model. We can start by simply separating these authors by gender. Since, Lovecraft, Hodgson, and Kornbluth are all men, we can club them together.
+
+```{r male_authors}
+male_authors <- bind_rows(lovecraft_import,kornbluth_import,kornbluth_import)
+```
+
+Grouping data together by variable name is not a very smart way to go about it, we want to add the attribute to the the data itself. We can do so by creating a new column through `mutate`.
+
+```{r male_column}
+male_authors <- male_authors %>% 
+                mutate(gender ="male")
+```
+
+Again, in `tidy` these need not be separate steps. Write the code to create a set of female authors that has the same format as the male authors.
+
+```{r female_authors}
+female_authors <-bind_rows(smith_import,norton_import,bradley_download) %>% 
+                 mutate(gender= "female")
+
+
+```
+
+We can then bind both tables together.
+
+```{r all_authors}
+all_authors <- bind_rows(male_authors, female_authors)
+```
+
+### Tidying the Text
+
+```{r tidy_all_authors}
+
+tidy_all_authors <- all_authors %>% 
+                    unnest_tokens(word, text) %>% 
+                    anti_join(stop_words)
+```
+
+### Creating operationalizing romance
+
+Now that we have our corpus in place, we can do some more "feature engineering" by marking each time one of our two operational concepts occurs: romance and technology.
+
+We can create two separate lexicons and join them to the table.
+
+```{r adding_romance}
+romance_words <- c("love","romance", "romantic", "desire", "relationship", "couple")
+
+romance_df <- data_frame(word = romance_words, romance = TRUE)
+
+technology_words <- c("science", "technology", "rational", "rationality","thinking","progress")
+
+technology_df <- data_frame(word = technology_words, technology = TRUE)
+```
+
+We can add these words by using a left_join. A left join will keep everything on left hand side 
+
+```{r tagged_words}
+all_authors_tagged <- tidy_all_authors %>% 
+                                left_join(romance_df) %>% 
+                                left_join(technology_df)
+
+
+```
+
+We can then establish some basic percentages for the use of each word.
+
+```{r calculate_words}
+all_authors_table <- all_authors_tagged %>% 
+                     group_by(gender) %>% 
+                     count(romance, technology) %>% 
+                     mutate (percent = n/sum(n)*100)
+```
+
+## Incorporating Sentiment Analysis
+
+This is all good and well, but we want to get an idea of how these particular words are being used by capturing the sentiment around them. Theoretically, how would we go about doing that?
+
+
+
+
