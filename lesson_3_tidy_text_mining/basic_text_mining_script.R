@@ -8,13 +8,13 @@ library(tidyr)
 library(scales)
 library(ggthemes)
 library(magrittr)
-library(devtools)
+#library(devtools)
 
 
 
 
 text <- c("Because I could not stop for Death -",
-          "He kindly stopped for me -",
+          "He because stopped for me -",
           "The Carriage held but just Ourselves -",
           "and Immortality")
 text["because", "he kindly", "the Carriage"]
@@ -26,7 +26,6 @@ text_df <- data_frame(line = 1:4, text = text)
 text_df  
 
 #What is the difference between text and text_df? Why does it matter?
-
 
 
 text_df %>%
@@ -57,9 +56,13 @@ tidy_books <- original_books %>%
 
 df_stopwords <-  data(stop_words)
 
+paritosh_words <- data_frame(word = c("jane", "emma", "john"))
 
 tidy_books <- tidy_books %>%
   anti_join(stop_words)  
+
+tidy_books <- tidy_books %>% 
+  anti_join(paritosh_words)
   
 capital_stopwords <- as.data.frame(str_to_title(stop_words$word)) %>% 
                         rename(word= 1)
@@ -104,13 +107,16 @@ tidy_books %>%
 
 hgwells <- gutenberg_download(c(35, 36, 5230, 159))
 
-hgwells <- gutenberg_download(c(35, 36, 5230, 159),mirror = "http://mirrors.xmission.com/gutenberg/")
+hgwells <- gutenberg_download(c(35, 36, 5230, 159), mirror = "ftp://ftp.ibiblio.org/pub/docs/books/gutenberg/")
+
 tidy_hgwells <- hgwells %>%
   unnest_tokens(word, text) %>%
   anti_join(stop_words)
 
 tidy_hgwells %>%
   count(word, sort = TRUE)    
+
+
 
 bronte <- gutenberg_download(c(1260, 768, 969, 9182, 767), mirror = "http://mirrors.xmission.com/gutenberg/")
 tidy_bronte <- bronte %>%
@@ -134,14 +140,14 @@ frequency3 <- bind_rows(mutate(tidy_bronte, author = "Brontë Sisters"),
                names_to = "author", values_to = "proportion")
 
 # expect a warning about rows with missing values being removed
-ggplot(frequency, aes(x = proportion, y = `Jane Austen`,
+ggplot(frequency3, aes(x = proportion, y = `Jane Austen`, 
                       color = abs(`Jane Austen` - proportion))) +
   geom_abline(color = "gray40", lty = 2) +
   geom_jitter(alpha = 0.1, size = 2.5, width = 0.3, height = 0.3) +
   geom_text(aes(label = word), check_overlap = TRUE, vjust = 1.5) +
   scale_x_log10(labels = percent_format()) +
   scale_y_log10(labels = percent_format()) +
-  scale_color_gradient(limits = c(0, 0.001),
+  scale_color_gradient(limits = c(0, 0.001), 
                        low = "darkslategray4", high = "gray75") +
   facet_wrap(~author, ncol = 2) +
   theme(legend.position="none") +
