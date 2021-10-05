@@ -283,7 +283,7 @@ Relative to male authors it appears that female authors are more focused on tech
 
 Part of the real beauty of R and tidy is how quickly you can model and represent data with just a few quick lines. In Excel, this process would be very, very involved. Here we did it with 16 lines of code. What's more, if the data changes we don't have to remake the same chart, but simply plug in new data.
 
-## Part 2: Sentiment Analysis
+## Part 3: Sentiment Analysis
 
 ### Finding sentence boundaries
 If we want to understand the sentiments around a particular topic within a text, we have to understand how that topic is embedded. That is, we want to know the sentiment around the concept when it is being used in a sentence. In order to get this, we have to mark each sentence in each text. Unfortunately, tidying up the text removes all the punctuation and we lose the sentence boundaries. If we go more upstream to `all_authors` we'll note that there is some text present, but this is split up by line endings and not punctuation. 
