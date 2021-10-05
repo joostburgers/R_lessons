@@ -1,0 +1,274 @@
+,words,kind
+6,England,location
+7,France,location
+8,London,location
+9,Westminster,location
+10,America,location
+11,Norway,location
+12,Paris,location
+14,Westminster Hall,location
+15,Joe,person
+16,Tom,person
+17,Jerry,person
+18,Mr Lorry,person
+19,Tellson,location
+20,Temple Bar,location
+21,Smith,person
+22,Dover,location
+23,Concord,location
+24,Dover,person
+25,Manette,person
+27,Turkey,location
+28,Channel,location
+29,Monsieur Manette,person
+30,Saint Antoine,person
+32,Monsieur Defarge,person
+33,Jacques,person
+34,NotreDame,person
+35,Defarge,person
+37,North Tower,location
+38,Anna Dominoes,person
+39,Mr Cruncher,person
+40,Mr Crunches,person
+41,Jerry Cruncher,person
+42,Temple,location
+43,Bar,location
+45,Charles Darnay,person
+46,Lewis,person
+47,Mr AttorneyGeneral,person
+48,John Barsad,person
+49,Canada,location
+50,North America,location
+51,Britain,location
+52,Greece,location
+53,Rome,location
+54,Roger Cly,person
+56,Doctor Manette,person
+57,Mr Carton,person
+58,Mr Stryver,person
+59,Washington,location
+60,Lucie Manette,person
+61,Charles Darnayjust,person
+62,Mr Darnay,person
+63,Sydney Carton,person
+64,King,location
+65,Sydney,location
+66,Hope,location
+67,Clerkenwell,location
+68,Soho,location
+69,Pross,person
+71,Solomon,person
+72,Miss Pross,person
+73,Cinderella,person
+75,Darnay,person
+76,Londonhave,location
+77,Saint Paul,person
+78,FarmerGeneral,person
+79,Notre Dame,person
+80,Unbelieving Chemists,person
+81,Professors,person
+82,Monsieur Orleans,person
+83,Monsieur,person
+84,Marquis,location
+85,Monsieur Gabelle,person
+86,Monsieur Charles,person
+87,Monsieur,location
+88,Timethrough,location
+89,Surely,person
+90,Cambridge,location
+93,Lucie,person
+94,Lucie,location
+95,Stryver,person
+96,Sydney,person
+97,Temple Court,location
+98,Old Bailey Spiiies,person
+99,Saint Pancras,person
+100,Chase,person
+101,Grace,person
+102,Jacques Two,person
+103,Jacques Four,person
+104,Jacques Five,person
+105,Jacques Three,person
+106,Scientific,location
+107,Madame Defarge,location
+108,Louis Fifteen,person
+109,King,person
+110,Queen,location
+111,Franceall France,location
+112,John,person
+113,Either Saint Antoine,person
+114,Saint,person
+115,Charles,person
+116,Adam,person
+117,Lorry,location
+118,Charles Darnayas,person
+119,Carton,person
+120,Poor Carton,person
+121,Charles,location
+122,Love,location
+123,Jacques One,person
+124,Two Thousand,person
+125,Jacques FiveandTwenty Thousand,person
+126,South Sea,location
+127,Haggard Saint Antoine,person
+128,Saint Antoine Quarter,person
+129,East,location
+130,Sardanapalus,location
+131,Bully Stryver,person
+132,Old England,location
+133,King of France,location
+134,Liberty,location
+135,Peace,person
+136,Evrémonde,person
+137,Saint Germain Quarter,person
+138,Earth,location
+139,La Guillotine,location
+140,Revolution,person
+141,Charles Evrémonde,person
+142,Monsieur Lorry,person
+143,Nick,person
+144,Midnight Murder,person
+145,John Solomon,person
+146,Solomon John,person
+147,Mr Barsad,person
+148,Solomon Pross,person
+149,Saint PancrasintheFields,person
+150,La Force,location
+151,Ernest Defarge,person
+152,Doctor,person
+153,As Carton,person
+154,Herhe,person
+155,Jarvis Lorry,person
+160,Philip,person
+161,Joe Gargery,person
+162,Philip Pirrip,person
+163,Alexander,person
+164,Abraham,person
+165,Roger,person
+166,Mrs Joe,person
+168,Pumblechook,person
+169,Mr Pumblechook,person
+170,Pork,location
+171,Mr Hubble,person
+172,Mr Wopsle,person
+173,Mrs Hubble,person
+174,Mr P,person
+175,Mark Antony,person
+176,Collins,person
+178,Joseph,person
+180,Havisham,person
+182,Joe,location
+183,Raymond,person
+184,Sarah Pocket,person
+185,Cousin Raymond,person
+186,Mr Camilla,person
+187,Matthew,person
+188,Georgiana,person
+189,Sarah,person
+190,Estella,person
+191,Miss Havisham,person
+192,Justices,person
+193,Lunnon,location
+194,Cain,person
+195,Pip,person
+196,George Barnwell,person
+197,Camberwell,location
+198,Biddy,person
+199,Josephor JoeGargery,person
+200,Joseph Gargery,person
+201,Mr Jaggers,person
+202,Athens,location
+203,Mr Pip,person
+204,Mr Trabb,person
+205,Pocket,person
+206,Mike,person
+207,earth,location
+208,Bill,person
+209,Little Britain,location
+210,Inn,person
+211,Mr Wemmick,person
+212,Mr Barnard,person
+213,Mr Pocket,person
+214,Herbert Pocket,person
+215,Herbert,person
+216,Covent Garden,location
+217,Jane,person
+218,Mrs Pocket,person
+219,Westminster Abbey,location
+220,Europe,location
+221,Knight,person
+222,Lord Chancellor,person
+223,Mrs Coiler,person
+224,Bentley,person
+225,Canterbury,location
+226,Prince,location
+227,Dutch,person
+228,Australia,location
+229,Bentley Drummle,person
+230,Wemmick,person
+231,Greenwich,location
+232,Jack,person
+233,George,person
+234,Castle,location
+235,Molly,person
+236,Startop,person
+237,Drummle,person
+238,Spider,location
+239,Mr Gargery,person
+241,Hyde Park,location
+242,Charlotte,person
+243,Rule Britannia,person
+244,Charlotte,location
+245,Denmark,location
+246,Mr Waldengarver,person
+247,Clara,person
+250,Wood Street,location
+251,Captain Tom,person
+252,Richmond,location
+253,Mr Matthew,person
+254,Moses,person
+255,Jane Pocket,person
+256,Lloyd,person
+257,Biddy,location
+258,Chelsea Reach,person
+259,Skiffins,person
+260,Gerrard Street,location
+261,Love,person
+262,Estella,location
+263,Of Richmond,person
+264,Marseilles,location
+265,Noble,person
+266,Portsmouth,location
+267,Botany Bay,location
+268,Herbert,location
+269,Essex Street,location
+270,Abel Magwitch,person
+271,New South Wales,location
+272,India,location
+274,Arthur,person
+275,Sally,person
+276,Essex,location
+278,Mr Drummle,person
+279,Drummle,location
+280,Matthew Pocket,person
+281,Philip Pip,person
+282,Mary Anne,person
+283,Richard,person
+285,Chinks,location
+286,Captain Cook,person
+287,Clara Barley,person
+288,Bill Barley,person
+289,Windsor,location
+290,Mr Campbell,person
+291,Christmas,person
+292,Mr Wopsle,location
+293,Old Orlick,location
+294,Wolf,person
+295,Kent,person
+296,Gravesend,location
+297,Hamburg,location
+298,Cairo,location
+299,Camberwell Green,person
+300,Sentences,location
+301,William,person
+302,Temple Gardens,location

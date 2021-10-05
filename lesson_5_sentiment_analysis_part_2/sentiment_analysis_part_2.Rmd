@@ -1,0 +1,398 @@
+---
+title: 'Sentiment Analysis: Part 2'
+author: "Johannes Burgers"
+date: "10/4/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+# Prefatory Material
+
+### Null Hypothesis:
+
+There is no difference in male and female science fiction writing with regard to relationships or technology.
+
+### Load Libraries
+
+```{r load_libraries}
+library(gutenbergr)
+library(tidytext)
+library(tidyverse)
+library(scales)
+library(ggthemes)
+```
+
+
+# Incorporating Sentiment Analysis
+
+## Review
+
+You may recall from last class we learned the following skills: 
+
+- generate a corpus through Gutenbergr
+
+- backup corpus as CSV
+
+- add metadata to corpus by adding a new column
+
+- add metadata to corpus through left_join
+
+- perform basic calculations on the corpus
+
+## Import data
+
+We can import the data from the previous class and take a look at it again:
+
+```{r import_datasets}
+all_authors_tagged <-
+  read_csv("backup/all_authors_tagged_backup.csv")
+all_authors <- read_csv("backup/all_authors_backup.csv")
+romance_df <- read_csv("backup/romance_backup.csv")
+technology_df <- read_csv("backup/technology_backup.csv")
+```
+
+We recall that we performed some basic descriptive statistics on this data.
+
+```{r total_author_overview}
+all_authors_table <- all_authors_tagged %>%
+  group_by(gender) %>%
+  count(romance, technology) %>%
+  mutate (percent = n / sum(n) * 100)
+```
+
+## Basic EDA with ggplot
+
+The table suggests that male authors write about romance more than the female authors. This data is incomplete. There could be any number of reasons why the male data is higher. For one, the count above is of the total number of occurrences and not the relative frequencies.
+
+We can calculate this data by dividing the total times romance word occurs relative to the total number of words in a text. First, we need to get the total words per title in a new column. Group the works by title then `add_count` and give the new column the name "length." 
+
+>Note that if you use the `count` function, you will only get `title` and `length` as your columns, because it drops the others by default. 
+
+Instead, the `add_count` function adds a new column with the value. We can then add a count of the number of romance words by using the function `mutate` to add a new column, and setting the value to `sum(romance, na.rm=TRUE)`. Since, this is a logical vector, TRUE is automatically converted to 1 and we can sum the results. We have to set `na.rm` to TRUE, so that the function ignores NA values. With our two new columns we can do the basic math in a third column and divide `romance_count` by `length`. Finally, we want to clean this up and only select the relevant columns `gender`, `author`, `title`, `relative_frequency`. Drop all duplicate values with the function distinct().
+
+```{r relative_frequency_long}
+all_authors_frequency <- all_authors_tagged %>%
+  group_by(title) %>%
+  add_count(name = "length") %>%
+  mutate(romance_count = sum(romance, na.rm = TRUE)) %>%
+  mutate(relative_frequency = romance_count / length) %>%
+  select(gender, author, title, relative_frequency) %>%
+  distinct()
+                          
+```
+
+This is quite a number of steps. We can refactor this with the `summarise` function to read:
+
+```{r relative_frequency_short}
+all_authors_frequency_short <- all_authors_tagged %>%
+  group_by(gender, author, title) %>%
+  summarise(relative_frequency_short =
+              sum(romance, na.rm = TRUE) / n())
+```
+
+From a computational perspective, the second option is more efficient, because you are not creating a series of unnecessary columns that will only be dropped later. At the same time, the first example is far more readable to people who may not necessarily be familiar with R. The "right" way to do it really depends on the audience!
+
+### Histograms with ggplot
+
+With our frequency tables in place we can see how this data is distributed. We may remember from basic stats that a histogram puts data into "bins" and then plots how full or empty the bins are. When looking at data distributions, this method is preferable to a bar chart, because when there are are a lot of variables (fifty texts in this case) it becomes much harder to compare groups of variables. 
+
+In `tidy` the ggplot function works in the following manner. First, call the table you want to work on: `all_authors_frequency`. Ggplot now knows that any of the specific arguments you will be using are going to be column names from that particular table. By default, it assumes the first value you enter is the x-axis. Since this is a histogram we only need to fill in one value `relative_frequency`. ggplot will calculate the number of times a frequency appears in a bin. We then tell ggplot that this is a histogram by adding the function `geom_histogram()`. Note that the `+` at the end of the ggplot function is used to add attributes. It functions similarly to the ` %>%` for table manipulations.
+
+```{r basic_histogram}
+all_authors_frequency %>%
+  ggplot(aes(relative_frequency)) +
+  geom_histogram()
+```
+
+We can look at the histogram and see that it is not a normal distribution, instead it has a long tail. 
+
+### Grouping variables in a histogram by `fill`
+
+Without clubbing the data together this is not all that useful. We can group variables by color by using the `fill` parameter in the initial function call. 
+
+```{r histogram_gender}
+all_authors_frequency %>%
+  ggplot(aes(relative_frequency, fill = gender)) +
+  geom_histogram()
+```
+
+This histogram gives us some indication as to the distribution of the data. Women tend to cluster near the far left, with a lower relative frequency of romance words than the men. Part of the issue though is that we cannot really see how the data is being plotted. Are the bars being stacked? Or are the lower bars being placed in front of each other? 
+
+### Tweaking the visuals
+
+We can tweak into visuals by digging into the `geom_histogram()` function a bit. We can change the representation by changing the line color to "black" (`color = "black"`), setting the transparency to 50% (`alpha = .5`), and setting the bars on the same position (`position = "identity"`).
+
+```{r histogram_authors}
+all_authors_frequency %>%
+  ggplot(aes(relative_frequency, fill = gender)) +
+  geom_histogram(color = "black",
+                 alpha = .5,
+                 position = "identity")
+```
+
+This chart is a bit clearer. We see that the number of works by men with a relative frequency of 0 romance words is slightly higher than that of those by women. In the previous example, this could have been misinterpreted as women having nearly double the number of works with 0 relative frequency of the occurrences of romance words. 
+
+### Changing the fill variable
+
+Still, this does not give us a lot of insight into how the data is distributed by author. This is simple fix, we merely change the fill from gender to author.
+
+```{r histogram_all_authors}
+all_authors_frequency %>%
+  ggplot(aes(relative_frequency, fill = author)) +
+  geom_histogram(color = "black",
+                 alpha = .5,
+                 position = "identity")
+```
+
+This chart gives a better overview of the distributions. We see that Evelyn Smith has some works with 0 frequency of the term, but also some works with a high relative frequency. Among the men, William Hope Hodgson is pulling up the average. The rest of the men are closer to the left side of the chart. 
+
+### Using facet_wrap()
+
+This chart is still difficult to read because it mixes the men and women. What we want is actually two charts: one men and one women. We can do this by adding the very useful function: facet_wrap(). Essentially, this peels off data along another variable. 
+
+```{r}
+all_authors_frequency %>%
+  ggplot(aes(relative_frequency, fill = author))+ 
+  geom_histogram(color = "black",
+    alpha = .5,
+    position = "identity")+
+  facet_wrap(~gender)
+```
+The distribution of the data seems to suggest that among the men Kornbluth and and Hodgson write more about romance. Among the women, only Evelyn Smith appears to write about romance. Still, we could have gathered this from a bar chart as well. 
+
+### Changing Bin Size
+
+Part of the issue is that the bin size is to fine-grained. If we reduce the number of bins the data aggregation will show more pronounced differences in the distribution. We can set the number of bins in the `geom_histogram()` function.
+
+```{r frequency_buckets}
+all_authors_frequency %>%
+  ggplot(aes(relative_frequency, fill = author))+ 
+  geom_histogram(color = "black",
+    alpha = .5,
+    position = "identity",
+    bins = 5)+
+  labs(title = "Histogram of Mentioned Locations by Occupation and Gender",
+       x = "Relative Frequency of Romance Words",
+       y = "Number of Texts",
+       fill = "Author") +
+  facet_wrap(~gender)
+```
+
+In the chart above it appears that the modal case for female authors is that they refer to romance less frequently than the men. 
+
+### Adding labels
+
+Of course, this chart is not very legible to someone trying to understand our data. We can add some labels and do some basic styling. 
+
+```{r histogram_styled}
+all_authors_frequency %>%
+  ggplot(aes(relative_frequency, fill = author))+ 
+  geom_histogram(color = "black",
+    alpha = .5,
+    position = "identity",
+    bins = 5)+
+  labs(title = "Romance Words by Gender and Author",
+       x = "Relative Frequency of Romance Words",
+       y = "Number of Texts",
+       fill = "Author") +
+  facet_wrap(~gender)
+```
+
+This is a bit more legible. 
+
+### Playing with themes
+
+The `ggthemes` package will let you select some standard themes to make your charts pop. For example, `theme_economist` will style your chart as if it were in an *Economist* article.
+
+```{r chart_themes}
+all_authors_frequency %>%
+  ggplot(aes(relative_frequency, fill = author)) +
+  geom_histogram(
+    color = "black",
+    alpha = .5,
+    position = "identity",
+    bins = 5
+  ) +
+  labs(title = "Romance Words by Gender and Author",
+       x = "Relative Frequency of Romance Words",
+       y = "Number of Texts",
+       fill = "Author") +
+  facet_wrap( ~ gender) +
+  theme_economist()
+```
+Unfortunately, it cuts off the authors on my version, but you can usually find a theme that will make your data look good. Let's try fivethirtyeight.
+
+
+```{r chart_themes_538}
+all_authors_frequency %>%
+  ggplot(aes(relative_frequency, fill = author)) +
+  geom_histogram(
+    color = "black",
+    alpha = .5,
+    position = "identity",
+    bins = 5
+  ) +
+  labs(title = "Romance Words by Gender and Author",
+       x = "Relative Frequency of Romance Words",
+       y = "Number of Texts",
+       fill = "Author") +
+  facet_wrap( ~ gender) +
+  theme_fivethirtyeight()
+```
+This chart looks a bit cleaner!
+
+## Remembering technology
+
+Of course, in our analysis we have totally forgotten about technology. We are interested in the possible contrast between technology and romance. Since, we have all the basic language for creating the romance chart, we can actually use that as our basis for thinking about technology. Rather than creating individual tables beforehand, we can actually pipe everything through in one go:
+
+```{r histogram_romance_technology}
+all_authors_tagged %>%
+  group_by(gender, author, title) %>%
+  #Run the same summary function, but instead of only creating one column                      create two.
+  summarise(
+    romance = sum(romance, na.rm = TRUE) / n(),
+    technology = sum(technology, na.rm = TRUE) / n()
+  ) %>%
+  #Pivot the table longer and put the column names next to their relative                      frequency values.
+  pivot_longer(romance:technology,
+               names_to = "concept",
+               values_to = "relative_frequency") %>%
+  #Clean up the variable by capitalizing them.
+  mutate(gender = str_to_title(gender), concept =
+           str_to_title(concept)) %>%
+  ggplot(aes(relative_frequency, fill = author)) +
+  geom_histogram(
+    color = "black",
+    alpha = .5,
+    position = "identity",
+    bins = 5
+  ) +
+  labs(title = "Romance and Technology by Gender and Author",
+       x = "Relative Frequency of Technology and Romance Words",
+       y = "Number of Texts",
+       fill = "Author") +
+  facet_wrap(vars(gender, concept)) +
+  theme_clean()
+```
+Relative to male authors it appears that female authors are more focused on technology than romance.
+
+Part of the real beauty of R and tidy is how quickly you can model and represent data with just a few quick lines. In Excel, this process would be very, very involved. Here we did it with 16 lines of code. What's more, if the data changes we don't have to remake the same chart, but simply plug in new data.
+
+# Sentiment Analysis
+
+## Finding sentence boundaries
+If we want to understand the sentiments around a particular topic within a text, we have to understand how that topic is embedded. That is, we want to know the sentiment around the concept when it is being used in a sentence. In order to get this, we have to mark each sentence in each text. Unfortunately, tidying up the text removes all the punctuation and we lose the sentence boundaries. If we go more upstream to `all_authors` we'll note that there is some text present, but this is split up by line endings and not punctuation. 
+
+```{r all_authors_preview}
+all_authors$text[300:310]
+```
+
+To fix this problem we need to collapse each text back to one giant text string, and then split it back up as sentences based on punctuation. For the sake of example, the `to_lower` argument has been set to `FALSE`, so we can understand the output better.
+
+```{r all_author_sentences}
+all_authors_sentence <- all_authors %>%
+  group_by(author, gender, title, text) %>%
+  summarise (text = paste(text, collapse = "")) %>%
+  unnest_regex(sentences, text, pattern = "[.?!]", to_lower = FALSE)  
+```
+
+The method is imperfect because quoted material tends to be split up. There are ways around this, but for now this will suffice. Because each sentence equals one row, we can set these equal to each other. Then unnest by word and remove all stop words.
+
+```{r author_sentence_nr}
+author_sentence_nr <- all_authors_sentence %>%
+  ungroup() %>%
+  mutate(sentence_number = row_number()) %>%
+  group_by(author, gender, title, sentence_number) %>%
+  unnest_tokens(word, sentences) %>%
+  anti_join(stop_words)
+```
+
+## Adding the concepts
+
+With the sentence numbers indicated, we can repeat the same process as above and "glue" on the romance, technology words. 
+
+```{r author_concept}
+author_concept <-  author_sentence_nr %>%
+  left_join(romance_df) %>%
+  left_join(technology_df) 
+```
+
+Now we want to attach the sentiments to these sentences.
+
+```{r author_concept_sentiment}
+author_concept_sentiment <- author_concept %>%
+  inner_join(get_sentiments("bing"))
+```
+
+### Calculating sentiment total
+
+Each sentence will now have one or multiple sentiments attached to it. We want to tabulate the average sentiment by sentence. We give each sentence a count by sentiment, which lists the total number of positive and negative sentiments. Then we `pivot_wider` to turn positive and negative into two columns, and subtract negative from positive to get the total for each sentence. Unfortunately, during this process our concept words get lost. We can retrieve them by left_joining `author_concept` by sentence_number. We only want the sentiment around concept words, and can filter out the rest. 
+
+```{r author_sentiment_total}
+author_sentiment_total <- author_concept_sentiment %>%
+  count(sentence_number, sentiment) %>%
+  pivot_wider(names_from = sentiment,
+              values_from = n,
+              values_fill = 0)  %>%
+  mutate(sentiment = positive - negative) %>%
+  left_join(author_concept) %>%
+  filter(romance == TRUE | technology == TRUE)
+```
+### Calculating sentiment by concept word
+
+We can do some quick math on the table to aggregate the various totals. We have to tally the sentiments for each concept words. We can do so by pivoting the table longer along the romance and technology comments. See how much pivoting you do! This makes romance and technology different variables within the same column, each with its own values attached. Some of the values will be NA, because there was no sentiment for that concept word in that sentence. We can drop all these. Then we group by gender, author, and concept to keep those columns. Finally, summarise by the sum of sentiment. That is, get the total sum of each sentiment by author by concept.
+
+
+```{r author_sentiment_table}
+author_sentiment_table <- author_sentiment_total %>%
+  pivot_longer(romance:technology,
+               names_to = "concept",
+               values_to = "total_sentiment")  %>%
+  drop_na() %>%
+  group_by(gender, author, concept) %>%
+  summarise (total = sum(sentiment)) %>%
+  ungroup()
+```
+
+### Plotting sentiment
+
+The table gives a numerical overview of the distribution of sentiments by concept by author. This is not necessarily the easiest to read. Let's make a chart.
+
+```{r author_sentiment_plot}
+author_sentiment_table %>%
+  ggplot(aes(author, y = total, fill = gender)) +
+  geom_col(color = "black",
+           alpha = .7,
+           position = "identity") +
+  facet_wrap(~ concept) +
+  labs(title = "Positive and Negative Sentiment by Concept",
+       x = "Overal Sentiment",
+       y = "Author",
+       fill = "Gender") +
+  coord_flip() 
+```
+This chart has all the right data and suggests that the most positive emotions around romance are in the work of Hodgson, and the most negative feelings around technology are Marion Zimmer Bradley's. Still, there are some fundamental problems with this chart. The data does not feel sorted right, and, more importantly, the color scheme is heavily gendered. Generally, you want to avoid "stereotypical" colors for categorical variables. We can sort the order by using the `reorder` function, and change the color palette by using the `scale_fill_brewer()` functin to select a different palette. Finally, we can capitalize the concept variables, and add a theme.
+
+```{r final_chart}
+author_sentiment_table %>%
+  mutate(gender = str_to_title(gender)) %>%
+  mutate(concept = str_to_title(concept)) %>%
+  ggplot(aes(reorder(author, -total), y = total, fill = gender)) +
+  geom_col(color = "black",
+           alpha = .7,
+           position = "identity") +
+  facet_wrap(~ concept) +
+  labs(title = "Positive and Negative Sentiment by Concept",
+       x = "Overal Sentiment",
+       y = "Author",
+       fill = "Gender") +
+  scale_fill_brewer(palette = "Dark2") +
+  coord_flip() +
+  theme_hc()
+```
+
+This chart is a bit clearer. On the whole, it appears that men use more sentiments in their texts and tend to be more positive about romance. Women write with fewer sentiments regarding romance and technology, with the exception of Marion Zimmer Bradley. Of course, if we wanted to we could change both the romance and technology word bank, and change the corpus.
+

@@ -37,9 +37,9 @@ In generaly, your markdown documents will have similar sections:
 
 Science fiction, especially in its early days, was a genre heavily dominated by men. Not only were the writers masculine, so were the plot arcs. Presumably, this had to do with the fact that since science fiction was about the rational exploration of the universe, women were disqualified from this genre because they concerned themselves with things that were too frivolous. Yet, in the early 1920s and 1930s, women's writing, either under pseudonym or real name did appear in pulp magazines. Some of these works have survived. The question arises, was this writing by women materially different than that of the men? If so, how? Part of the exclusionary logic of science fiction writing by men, presupposed that women were only concerned with love and relationships, rather than adventure and technology.
 
-## Hypothesis:
+## Null Hypothesis:
 
-There is no difference in male and female science fiction writing wirth regard to relationships or technology.
+There is no difference in male and female science fiction writing with regard to relationships or technology.
 
 ## Load Libraries
 
@@ -106,7 +106,7 @@ Hodgson$author
 
 Note that many of the works are not actually William Hope Hodgson. We will have to be more specific.
 
-```{r hodgson_download}
+```{r hodgson_download, eval=FALSE}
 hodgson_download <-  gutenberg_works() %>% 
                 filter(str_detect(author, "Hodgson, William")) %>% 
                 gutenberg_download(meta_fields = c("title", "author"))
@@ -181,7 +181,7 @@ smith_import <- read_csv("backup/smith_backup.csv")
 Now that we have our data in place, we can start adding complexity to the data model. We can start by simply separating these authors by gender. Since, Lovecraft, Hodgson, and Kornbluth are all men, we can club them together.
 
 ```{r male_authors}
-male_authors <- bind_rows(lovecraft_import,kornbluth_import,kornbluth_import)
+male_authors <- bind_rows(lovecraft_import,kornbluth_import,hodgson_import)
 ```
 
 Grouping data together by variable name is not a very smart way to go about it, we want to add the attribute to the the data itself. We can do so by creating a new column through `mutate`.
