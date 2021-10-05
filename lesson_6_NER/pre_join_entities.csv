@@ -1,303 +1,303 @@
-"","words","kind"
-"1","People","person"
-"2","Reason","person"
-"3","Head X","location"
-"4","Storm","location"
-"5","Light","location"
-"6","England","location"
-"7","France","location"
-"8","London","location"
-"9","Westminster","location"
-"10","America","location"
-"11","Norway","location"
-"12","Paris","location"
-"13","Farmer","location"
-"14","Westminster Hall","location"
-"15","Joe","person"
-"16","Tom","person"
-"17","Jerry","person"
-"18","Mr Lorry","person"
-"19","Tellson","location"
-"20","Temple Bar","location"
-"21","Smith","person"
-"22","Dover","location"
-"23","Concord","location"
-"24","Dover","person"
-"25","Manette","person"
-"26","Pray","person"
-"27","Turkey","location"
-"28","Channel","location"
-"29","Monsieur Manette","person"
-"30","Saint Antoine","person"
-"31","Providence","location"
-"32","Monsieur Defarge","person"
-"33","Jacques","person"
-"34","NotreDame","person"
-"35","Defarge","person"
-"36","Devil","location"
-"37","North Tower","location"
-"38","Anna Dominoes","person"
-"39","Mr Cruncher","person"
-"40","Mr Crunches","person"
-"41","Jerry Cruncher","person"
-"42","Temple","location"
-"43","Bar","location"
-"44","Porter","person"
-"45","Charles Darnay","person"
-"46","Lewis","person"
-"47","Mr AttorneyGeneral","person"
-"48","John Barsad","person"
-"49","Canada","location"
-"50","North America","location"
-"51","Britain","location"
-"52","Greece","location"
-"53","Rome","location"
-"54","Roger Cly","person"
-"55","Lord","person"
-"56","Doctor Manette","person"
-"57","Mr Carton","person"
-"58","Mr Stryver","person"
-"59","Washington","location"
-"60","Lucie Manette","person"
-"61","Charles Darnayjust","person"
-"62","Mr Darnay","person"
-"63","Sydney Carton","person"
-"64","King","location"
-"65","Sydney","location"
-"66","Hope","location"
-"67","Clerkenwell","location"
-"68","Soho","location"
-"69","Pross","person"
-"70","Art","person"
-"71","Solomon","person"
-"72","Miss Pross","person"
-"73","Cinderella","person"
-"74","Miss","person"
-"75","Darnay","person"
-"76","Londonhave","location"
-"77","Saint Paul","person"
-"78","FarmerGeneral","person"
-"79","Notre Dame","person"
-"80","Unbelieving Chemists","person"
-"81","Professors","person"
-"82","Monsieur Orleans","person"
-"83","Monsieur","person"
-"84","Marquis","location"
-"85","Monsieur Gabelle","person"
-"86","Monsieur Charles","person"
-"87","Monsieur","location"
-"88","Timethrough","location"
-"89","Surely","person"
-"90","Cambridge","location"
-"91","Latin","location"
-"92","Dear","person"
-"93","Lucie","person"
-"94","Lucie","location"
-"95","Stryver","person"
-"96","Sydney","person"
-"97","Temple Court","location"
-"98","Old Bailey Spiiies","person"
-"99","Saint Pancras","person"
-"100","Chase","person"
-"101","Grace","person"
-"102","Jacques Two","person"
-"103","Jacques Four","person"
-"104","Jacques Five","person"
-"105","Jacques Three","person"
-"106","Scientific","location"
-"107","Madame Defarge","location"
-"108","Louis Fifteen","person"
-"109","King","person"
-"110","Queen","location"
-"111","Franceall France","location"
-"112","John","person"
-"113","Either Saint Antoine","person"
-"114","Saint","person"
-"115","Charles","person"
-"116","Adam","person"
-"117","Lorry","location"
-"118","Charles Darnayas","person"
-"119","Carton","person"
-"120","Poor Carton","person"
-"121","Charles","location"
-"122","Love","location"
-"123","Jacques One","person"
-"124","Two Thousand","person"
-"125","Jacques FiveandTwenty Thousand","person"
-"126","South Sea","location"
-"127","Haggard Saint Antoine","person"
-"128","Saint Antoine Quarter","person"
-"129","East","location"
-"130","Sardanapalus","location"
-"131","Bully Stryver","person"
-"132","Old England","location"
-"133","King of France","location"
-"134","Liberty","location"
-"135","Peace","person"
-"136","Evrémonde","person"
-"137","Saint Germain Quarter","person"
-"138","Earth","location"
-"139","La Guillotine","location"
-"140","Revolution","person"
-"141","Charles Evrémonde","person"
-"142","Monsieur Lorry","person"
-"143","Nick","person"
-"144","Midnight Murder","person"
-"145","John Solomon","person"
-"146","Solomon John","person"
-"147","Mr Barsad","person"
-"148","Solomon Pross","person"
-"149","Saint PancrasintheFields","person"
-"150","La Force","location"
-"151","Ernest Defarge","person"
-"152","Doctor","person"
-"153","As Carton","person"
-"154","Herhe","person"
-"155","Jarvis Lorry","person"
-"156","Behold","location"
-"157","Brave","location"
-"158","Charles Dickens Contents Chapter","person"
-"159","Christian","person"
-"160","Philip","person"
-"161","Joe Gargery","person"
-"162","Philip Pirrip","person"
-"163","Alexander","person"
-"164","Abraham","person"
-"165","Roger","person"
-"166","Mrs Joe","person"
-"167","Damn","person"
-"168","Pumblechook","person"
-"169","Mr Pumblechook","person"
-"170","Pork","location"
-"171","Mr Hubble","person"
-"172","Mr Wopsle","person"
-"173","Mrs Hubble","person"
-"174","Mr P","person"
-"175","Mark Antony","person"
-"176","Collins","person"
-"177","Revenge","person"
-"178","Joseph","person"
-"179","Goodmorning","person"
-"180","Havisham","person"
-"181","Parliament","location"
-"182","Joe","location"
-"183","Raymond","person"
-"184","Sarah Pocket","person"
-"185","Cousin Raymond","person"
-"186","Mr Camilla","person"
-"187","Matthew","person"
-"188","Georgiana","person"
-"189","Sarah","person"
-"190","Estella","person"
-"191","Miss Havisham","person"
-"192","Justices","person"
-"193","Lunnon","location"
-"194","Cain","person"
-"195","Pip","person"
-"196","George Barnwell","person"
-"197","Camberwell","location"
-"198","Biddy","person"
-"199","Josephor JoeGargery","person"
-"200","Joseph Gargery","person"
-"201","Mr Jaggers","person"
-"202","Athens","location"
-"203","Mr Pip","person"
-"204","Mr Trabb","person"
-"205","Pocket","person"
-"206","Mike","person"
-"207","earth","location"
-"208","Bill","person"
-"209","Little Britain","location"
-"210","Inn","person"
-"211","Mr Wemmick","person"
-"212","Mr Barnard","person"
-"213","Mr Pocket","person"
-"214","Herbert Pocket","person"
-"215","Herbert","person"
-"216","Covent Garden","location"
-"217","Jane","person"
-"218","Mrs Pocket","person"
-"219","Westminster Abbey","location"
-"220","Europe","location"
-"221","Knight","person"
-"222","Lord Chancellor","person"
-"223","Mrs Coiler","person"
-"224","Bentley","person"
-"225","Canterbury","location"
-"226","Prince","location"
-"227","Dutch","person"
-"228","Australia","location"
-"229","Bentley Drummle","person"
-"230","Wemmick","person"
-"231","Greenwich","location"
-"232","Jack","person"
-"233","George","person"
-"234","Castle","location"
-"235","Molly","person"
-"236","Startop","person"
-"237","Drummle","person"
-"238","Spider","location"
-"239","Mr Gargery","person"
-"240","Queens","location"
-"241","Hyde Park","location"
-"242","Charlotte","person"
-"243","Rule Britannia","person"
-"244","Charlotte","location"
-"245","Denmark","location"
-"246","Mr Waldengarver","person"
-"247","Clara","person"
-"248","Sir","person"
-"249","King of","location"
-"250","Wood Street","location"
-"251","Captain Tom","person"
-"252","Richmond","location"
-"253","Mr Matthew","person"
-"254","Moses","person"
-"255","Jane Pocket","person"
-"256","Lloyd","person"
-"257","Biddy","location"
-"258","Chelsea Reach","person"
-"259","Skiffins","person"
-"260","Gerrard Street","location"
-"261","Love","person"
-"262","Estella","location"
-"263","Of Richmond","person"
-"264","Marseilles","location"
-"265","Noble","person"
-"266","Portsmouth","location"
-"267","Botany Bay","location"
-"268","Herbert","location"
-"269","Essex Street","location"
-"270","Abel Magwitch","person"
-"271","New South Wales","location"
-"272","India","location"
-"273","Provis","location"
-"274","Arthur","person"
-"275","Sally","person"
-"276","Essex","location"
-"277","Provis","person"
-"278","Mr Drummle","person"
-"279","Drummle","location"
-"280","Matthew Pocket","person"
-"281","Philip Pip","person"
-"282","Mary Anne","person"
-"283","Richard","person"
-"284","Garden","location"
-"285","Chinks","location"
-"286","Captain Cook","person"
-"287","Clara Barley","person"
-"288","Bill Barley","person"
-"289","Windsor","location"
-"290","Mr Campbell","person"
-"291","Christmas","person"
-"292","Mr Wopsle","location"
-"293","Old Orlick","location"
-"294","Wolf","person"
-"295","Kent","person"
-"296","Gravesend","location"
-"297","Hamburg","location"
-"298","Cairo","location"
-"299","Camberwell Green","person"
-"300","Sentences","location"
-"301","William","person"
-"302","Temple Gardens","location"
+words,kind
+People,person
+Reason,person
+Head X,location
+Storm,location
+Light,location
+England,location
+France,location
+London,location
+Westminster,location
+America,location
+Norway,location
+Paris,location
+Farmer,location
+Westminster Hall,location
+Joe,person
+Tom,person
+Jerry,person
+Mr Lorry,person
+Tellson,location
+Temple Bar,location
+Smith,person
+Dover,location
+Concord,location
+Dover,person
+Manette,person
+Pray,person
+Turkey,location
+Channel,location
+Monsieur Manette,person
+Saint Antoine,person
+Providence,location
+Monsieur Defarge,person
+Jacques,person
+NotreDame,person
+Defarge,person
+Devil,location
+North Tower,location
+Anna Dominoes,person
+Mr Cruncher,person
+Mr Crunches,person
+Jerry Cruncher,person
+Temple,location
+Bar,location
+Porter,person
+Charles Darnay,person
+Lewis,person
+Mr AttorneyGeneral,person
+John Barsad,person
+Canada,location
+North America,location
+Britain,location
+Greece,location
+Rome,location
+Roger Cly,person
+Lord,person
+Doctor Manette,person
+Mr Carton,person
+Mr Stryver,person
+Washington,location
+Lucie Manette,person
+Charles Darnayjust,person
+Mr Darnay,person
+Sydney Carton,person
+King,location
+Sydney,location
+Hope,location
+Clerkenwell,location
+Soho,location
+Pross,person
+Art,person
+Solomon,person
+Miss Pross,person
+Cinderella,person
+Miss,person
+Darnay,person
+Londonhave,location
+Saint Paul,person
+FarmerGeneral,person
+Notre Dame,person
+Unbelieving Chemists,person
+Professors,person
+Monsieur Orleans,person
+Monsieur,person
+Marquis,location
+Monsieur Gabelle,person
+Monsieur Charles,person
+Monsieur,location
+Timethrough,location
+Surely,person
+Cambridge,location
+Latin,location
+Dear,person
+Lucie,person
+Lucie,location
+Stryver,person
+Sydney,person
+Temple Court,location
+Old Bailey Spiiies,person
+Saint Pancras,person
+Chase,person
+Grace,person
+Jacques Two,person
+Jacques Four,person
+Jacques Five,person
+Jacques Three,person
+Scientific,location
+Madame Defarge,location
+Louis Fifteen,person
+King,person
+Queen,location
+Franceall France,location
+John,person
+Either Saint Antoine,person
+Saint,person
+Charles,person
+Adam,person
+Lorry,location
+Charles Darnayas,person
+Carton,person
+Poor Carton,person
+Charles,location
+Love,location
+Jacques One,person
+Two Thousand,person
+Jacques FiveandTwenty Thousand,person
+South Sea,location
+Haggard Saint Antoine,person
+Saint Antoine Quarter,person
+East,location
+Sardanapalus,location
+Bully Stryver,person
+Old England,location
+King of France,location
+Liberty,location
+Peace,person
+EvrÃ©monde,person
+Saint Germain Quarter,person
+Earth,location
+La Guillotine,location
+Revolution,person
+Charles EvrÃ©monde,person
+Monsieur Lorry,person
+Nick,person
+Midnight Murder,person
+John Solomon,person
+Solomon John,person
+Mr Barsad,person
+Solomon Pross,person
+Saint PancrasintheFields,person
+La Force,location
+Ernest Defarge,person
+Doctor,person
+As Carton,person
+Herhe,person
+Jarvis Lorry,person
+Behold,location
+Brave,location
+Charles Dickens Contents Chapter,person
+Christian,person
+Philip,person
+Joe Gargery,person
+Philip Pirrip,person
+Alexander,person
+Abraham,person
+Roger,person
+Mrs Joe,person
+Damn,person
+Pumblechook,person
+Mr Pumblechook,person
+Pork,location
+Mr Hubble,person
+Mr Wopsle,person
+Mrs Hubble,person
+Mr P,person
+Mark Antony,person
+Collins,person
+Revenge,person
+Joseph,person
+Goodmorning,person
+Havisham,person
+Parliament,location
+Joe,location
+Raymond,person
+Sarah Pocket,person
+Cousin Raymond,person
+Mr Camilla,person
+Matthew,person
+Georgiana,person
+Sarah,person
+Estella,person
+Miss Havisham,person
+Justices,person
+Lunnon,location
+Cain,person
+Pip,person
+George Barnwell,person
+Camberwell,location
+Biddy,person
+Josephor JoeGargery,person
+Joseph Gargery,person
+Mr Jaggers,person
+Athens,location
+Mr Pip,person
+Mr Trabb,person
+Pocket,person
+Mike,person
+earth,location
+Bill,person
+Little Britain,location
+Inn,person
+Mr Wemmick,person
+Mr Barnard,person
+Mr Pocket,person
+Herbert Pocket,person
+Herbert,person
+Covent Garden,location
+Jane,person
+Mrs Pocket,person
+Westminster Abbey,location
+Europe,location
+Knight,person
+Lord Chancellor,person
+Mrs Coiler,person
+Bentley,person
+Canterbury,location
+Prince,location
+Dutch,person
+Australia,location
+Bentley Drummle,person
+Wemmick,person
+Greenwich,location
+Jack,person
+George,person
+Castle,location
+Molly,person
+Startop,person
+Drummle,person
+Spider,location
+Mr Gargery,person
+Queens,location
+Hyde Park,location
+Charlotte,person
+Rule Britannia,person
+Charlotte,location
+Denmark,location
+Mr Waldengarver,person
+Clara,person
+Sir,person
+King of,location
+Wood Street,location
+Captain Tom,person
+Richmond,location
+Mr Matthew,person
+Moses,person
+Jane Pocket,person
+Lloyd,person
+Biddy,location
+Chelsea Reach,person
+Skiffins,person
+Gerrard Street,location
+Love,person
+Estella,location
+Of Richmond,person
+Marseilles,location
+Noble,person
+Portsmouth,location
+Botany Bay,location
+Herbert,location
+Essex Street,location
+Abel Magwitch,person
+New South Wales,location
+India,location
+Provis,location
+Arthur,person
+Sally,person
+Essex,location
+Provis,person
+Mr Drummle,person
+Drummle,location
+Matthew Pocket,person
+Philip Pip,person
+Mary Anne,person
+Richard,person
+Garden,location
+Chinks,location
+Captain Cook,person
+Clara Barley,person
+Bill Barley,person
+Windsor,location
+Mr Campbell,person
+Christmas,person
+Mr Wopsle,location
+Old Orlick,location
+Wolf,person
+Kent,person
+Gravesend,location
+Hamburg,location
+Cairo,location
+Camberwell Green,person
+Sentences,location
+William,person
+Temple Gardens,location

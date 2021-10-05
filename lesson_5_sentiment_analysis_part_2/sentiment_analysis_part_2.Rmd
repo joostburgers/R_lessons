@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 ```
 
-# Prefatory Material
+## Part 0: Prefatory Material
 
 ### Null Hypothesis:
 
@@ -26,9 +26,7 @@ library(ggthemes)
 ```
 
 
-# Incorporating Sentiment Analysis
-
-## Review
+## Part 1: Review
 
 You may recall from last class we learned the following skills: 
 
@@ -63,7 +61,7 @@ all_authors_table <- all_authors_tagged %>%
   mutate (percent = n / sum(n) * 100)
 ```
 
-## Basic EDA with ggplot
+## Part 2: Basic EDA with ggplot
 
 The table suggests that male authors write about romance more than the female authors. This data is incomplete. There could be any number of reasons why the male data is higher. For one, the count above is of the total number of occurrences and not the relative frequencies.
 
@@ -86,7 +84,7 @@ all_authors_frequency <- all_authors_tagged %>%
 
 This is quite a number of steps. We can refactor this with the `summarise` function to read:
 
-```{r relative_frequency_short}
+```{r relative_frequency_short, message=FALSE}
 all_authors_frequency_short <- all_authors_tagged %>%
   group_by(gender, author, title) %>%
   summarise(relative_frequency_short =
@@ -106,7 +104,7 @@ all_authors_frequency %>%
   ggplot(aes(relative_frequency)) +
   geom_histogram()
 ```
-
+   
 We can look at the histogram and see that it is not a normal distribution, instead it has a long tail. 
 
 ### Grouping variables in a histogram by `fill`
@@ -118,7 +116,7 @@ all_authors_frequency %>%
   ggplot(aes(relative_frequency, fill = gender)) +
   geom_histogram()
 ```
-
+  
 This histogram gives us some indication as to the distribution of the data. Women tend to cluster near the far left, with a lower relative frequency of romance words than the men. Part of the issue though is that we cannot really see how the data is being plotted. Are the bars being stacked? Or are the lower bars being placed in front of each other? 
 
 ### Tweaking the visuals
@@ -132,10 +130,10 @@ all_authors_frequency %>%
                  alpha = .5,
                  position = "identity")
 ```
-
+   
 This chart is a bit clearer. We see that the number of works by men with a relative frequency of 0 romance words is slightly higher than that of those by women. In the previous example, this could have been misinterpreted as women having nearly double the number of works with 0 relative frequency of the occurrences of romance words. 
 
-### Changing the fill variable
+### Changing the `fill` variable
 
 Still, this does not give us a lot of insight into how the data is distributed by author. This is simple fix, we merely change the fill from gender to author.
 
@@ -146,7 +144,7 @@ all_authors_frequency %>%
                  alpha = .5,
                  position = "identity")
 ```
-
+   
 This chart gives a better overview of the distributions. We see that Evelyn Smith has some works with 0 frequency of the term, but also some works with a high relative frequency. Among the men, William Hope Hodgson is pulling up the average. The rest of the men are closer to the left side of the chart. 
 
 ### Using facet_wrap()
@@ -161,6 +159,7 @@ all_authors_frequency %>%
     position = "identity")+
   facet_wrap(~gender)
 ```
+   
 The distribution of the data seems to suggest that among the men Kornbluth and and Hodgson write more about romance. Among the women, only Evelyn Smith appears to write about romance. Still, we could have gathered this from a bar chart as well. 
 
 ### Changing Bin Size
@@ -180,7 +179,7 @@ all_authors_frequency %>%
        fill = "Author") +
   facet_wrap(~gender)
 ```
-
+   
 In the chart above it appears that the modal case for female authors is that they refer to romance less frequently than the men. 
 
 ### Adding labels
@@ -200,7 +199,7 @@ all_authors_frequency %>%
        fill = "Author") +
   facet_wrap(~gender)
 ```
-
+  
 This is a bit more legible. 
 
 ### Playing with themes
@@ -223,6 +222,7 @@ all_authors_frequency %>%
   facet_wrap( ~ gender) +
   theme_economist()
 ```
+  
 Unfortunately, it cuts off the authors on my version, but you can usually find a theme that will make your data look good. Let's try fivethirtyeight.
 
 
@@ -242,9 +242,10 @@ all_authors_frequency %>%
   facet_wrap( ~ gender) +
   theme_fivethirtyeight()
 ```
-This chart looks a bit cleaner!
+  
+  This chart looks a bit cleaner!
 
-## Remembering technology
+### Remembering technology
 
 Of course, in our analysis we have totally forgotten about technology. We are interested in the possible contrast between technology and romance. Since, we have all the basic language for creating the romance chart, we can actually use that as our basis for thinking about technology. Rather than creating individual tables beforehand, we can actually pipe everything through in one go:
 
@@ -277,13 +278,14 @@ all_authors_tagged %>%
   facet_wrap(vars(gender, concept)) +
   theme_clean()
 ```
+   
 Relative to male authors it appears that female authors are more focused on technology than romance.
 
 Part of the real beauty of R and tidy is how quickly you can model and represent data with just a few quick lines. In Excel, this process would be very, very involved. Here we did it with 16 lines of code. What's more, if the data changes we don't have to remake the same chart, but simply plug in new data.
 
-# Sentiment Analysis
+## Part 2: Sentiment Analysis
 
-## Finding sentence boundaries
+### Finding sentence boundaries
 If we want to understand the sentiments around a particular topic within a text, we have to understand how that topic is embedded. That is, we want to know the sentiment around the concept when it is being used in a sentence. In order to get this, we have to mark each sentence in each text. Unfortunately, tidying up the text removes all the punctuation and we lose the sentence boundaries. If we go more upstream to `all_authors` we'll note that there is some text present, but this is split up by line endings and not punctuation. 
 
 ```{r all_authors_preview}
@@ -310,7 +312,7 @@ author_sentence_nr <- all_authors_sentence %>%
   anti_join(stop_words)
 ```
 
-## Adding the concepts
+### Adding the concepts
 
 With the sentence numbers indicated, we can repeat the same process as above and "glue" on the romance, technology words. 
 
@@ -374,7 +376,12 @@ author_sentiment_table %>%
        fill = "Gender") +
   coord_flip() 
 ```
-This chart has all the right data and suggests that the most positive emotions around romance are in the work of Hodgson, and the most negative feelings around technology are Marion Zimmer Bradley's. Still, there are some fundamental problems with this chart. The data does not feel sorted right, and, more importantly, the color scheme is heavily gendered. Generally, you want to avoid "stereotypical" colors for categorical variables. We can sort the order by using the `reorder` function, and change the color palette by using the `scale_fill_brewer()` functin to select a different palette. Finally, we can capitalize the concept variables, and add a theme.
+  
+This chart has all the right data and suggests that the most positive emotions around romance are in the work of Hodgson, and the most negative feelings around technology are Marion Zimmer Bradley's. 
+
+### Finalizing the plot
+  
+Still, there are some fundamental problems with this chart. The data does not feel sorted right, and, more importantly, the color scheme is heavily gendered. Generally, you want to avoid "stereotypical" colors for categorical variables. We can sort the order by using the `reorder` function, and change the color palette by using the `scale_fill_brewer()` functin to select a different palette. Finally, we can capitalize the concept variables, and add a theme.
 
 ```{r final_chart}
 author_sentiment_table %>%
