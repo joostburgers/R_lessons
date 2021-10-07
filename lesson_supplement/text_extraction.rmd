@@ -56,25 +56,25 @@ This will search your directory for `.txt` files and try to extract the metadata
 
 ```{r batch_import}
 all_works <-
-  list.files(pattern = "*.txt") %>%
-  map_df(~ data_frame(
-    text = read_file(.),
+  list.files(pattern = "*.txt") %>% #grab a list of all the files with .txt extension
+  map_df(~ data_frame(  #the map function performs the same command on all parts of the data set. In this case the .txt files
+    text = read_file(.), #read the files
     date = ifelse(
       str_detect(basename(.), "[:digit:]{4}") == TRUE,
       str_extract(basename(.), "[:digit:]{4}"),
       NA
-    )
+    ) #see if there is a date in yyyy format, i.e. 1987, and extract the date, if it can't fine date NA
   )) %>%
-  mutate(author = str_extract(text, "(?<=Author:).*")) %>%
-  mutate(author = str_squish(author)) %>%
+  mutate(author = str_extract(text, "(?<=Author:).*")) %>% #extract the text after Author: in the document as author
+  mutate(author = str_squish(author)) %>% #remove any whitespace
   mutate(author = ifelse(
     str_detect(author, ",") == FALSE,
     paste(last_name(author), ", ",
           first_name(author), sep = ""),
     author
-  )) %>%
-  mutate(title = str_extract(text, "(?<=Title:).*")) %>%
-  mutate(title = str_squish(title))
+  )) %>% #detect whether this is First Name Last Name or Last Name, First Name and switch
+  mutate(title = str_extract(text, "(?<=Title:).*")) %>% #grab title
+  mutate(title = str_squish(title)) #trim title
 ```
 
 
@@ -86,21 +86,21 @@ Once you have extracted the relevant information, you will no longer want the Gu
 df_all <- all_works %>%
   group_by(author,  title, date) %>%
   unnest_lines(line, text) %>%
-  mutate(line_nr = row_number()) %>%
+  mutate(line_nr = row_number()) %>% #add line number by work
   mutate(header = ifelse(
     str_detect(line, "start of this project gutenberg") == TRUE,
     row_number(),
     ""
-  )) %>%
+  )) %>% #find line in each book that starts with start of this project gutenberg...
   mutate(footer = ifelse(
     str_detect(line, "end of this project gutenberg") == TRUE,
     row_number(),
     ""
-  )) %>%
-  mutate(header_nr = max(header)) %>%
-  mutate(footer_nr = max(footer)) %>%
-  filter(line_nr > header_nr & line_nr < footer_nr) %>%
-  select (author, title, date, line)
+  )) %>% #find line that starts with end of this project...
+  mutate(header_nr = max(header)) %>% #get header location by work
+  mutate(footer_nr = max(footer)) %>% #get footer location by work
+  filter(line_nr > header_nr & line_nr < footer_nr) %>% #filter out only that text between header and footer
+  select (author, title, date, line) #delete helper columns
 ```
 
 
