@@ -1,0 +1,106 @@
+---
+title: "text_extraction"
+author: "Johannes Burgers"
+date: "10/7/2021"
+output: html_document
+---
+
+## Overview
+Some students requested a function to read in `.txt` files and gather metadata. This can be tricky because Gutenberg data is not always consistent. There's three flavors to choose from: basic, fancy, and auto. 
+
+
+```{r}
+library(tidyverse) #Used for Tidy things
+library(humaniformat) # used to convert from First Name Last Name to Last Name, First Name
+library(tidytext)
+```
+
+### Basic
+
+In this example, you have to change the variable `text_name` to the one you want to work with. Then replace the text with the one you are importing. Finally, in basename replace the filename with the one you are importing and the author to the author it belongs to. With some slight modifications it tries to title the work according to file name and author based on the author you supplied.
+
+
+```{r readfile_basic}
+text_name <-
+  data_frame(text = (read_file("1742 Joseph Andrews Vol 1.txt"))) %>%
+  mutate(title = basename("1742 Joseph Andrews Vol 1.txt"), author = "Henry Fielding") %>% 
+  mutate(title = str_replace(title, ".txt","")) %>% 
+  mutate(title = str_to_title(title)) 
+```
+
+### Fancy
+
+This reads in the file, and if it has a standard Gutenberg header, then it extracts the author and title. If you put the date in the file name, it will also find that.
+
+```{r readfile_advanced}
+variable_name <-
+  data_frame(text = (read_file("1742 Joseph Andrews Vol 1.txt"))) %>%
+  mutate(author = str_extract(text, "(?<=Author:).*")) %>%
+  mutate(author = str_squish(author)) %>% 
+  mutate(author = ifelse(
+    str_detect(author, ",") == FALSE,
+    paste(last_name(author),", ",
+    first_name(author), sep=""), author)) %>% 
+  mutate(title = str_extract(text, "(?<=Title:).*")) %>%
+  mutate(title = str_squish(title)) %>% 
+  mutate(date = ifelse(
+      str_detect(basename(.), "[:digit:]{4}") == TRUE,
+      str_extract(basename(.), "[:digit:]{4}"),
+      NA
+    ))
+```
+
+## Auto
+
+This will search your directory for `.txt` files and try to extract the metadata. If the file names have years in them, it will also create a date column.
+
+```{r batch_import}
+all_works <-
+  list.files(pattern = "*.txt") %>%
+  map_df(~ data_frame(
+    text = read_file(.),
+    date = ifelse(
+      str_detect(basename(.), "[:digit:]{4}") == TRUE,
+      str_extract(basename(.), "[:digit:]{4}"),
+      NA
+    )
+  )) %>%
+  mutate(author = str_extract(text, "(?<=Author:).*")) %>%
+  mutate(author = str_squish(author)) %>%
+  mutate(author = ifelse(
+    str_detect(author, ",") == FALSE,
+    paste(last_name(author), ", ",
+          first_name(author), sep = ""),
+    author
+  )) %>%
+  mutate(title = str_extract(text, "(?<=Title:).*")) %>%
+  mutate(title = str_squish(title))
+```
+
+
+## Remove Gutenberg header and footer
+
+Once you have extracted the relevant information, you will no longer want the Gutenberg data. You can strip it with this function.
+
+```{r strip_meta}
+df_all <- all_works %>%
+  group_by(author,  title, date) %>%
+  unnest_lines(line, text) %>%
+  mutate(line_nr = row_number()) %>%
+  mutate(header = ifelse(
+    str_detect(line, "start of this project gutenberg") == TRUE,
+    row_number(),
+    ""
+  )) %>%
+  mutate(footer = ifelse(
+    str_detect(line, "end of this project gutenberg") == TRUE,
+    row_number(),
+    ""
+  )) %>%
+  mutate(header_nr = max(header)) %>%
+  mutate(footer_nr = max(footer)) %>%
+  filter(line_nr > header_nr & line_nr < footer_nr) %>%
+  select (author, title, date, line)
+```
+
+
