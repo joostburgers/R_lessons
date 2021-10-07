@@ -77,7 +77,7 @@ all_authors_frequency <- all_authors_tagged %>%
   add_count(name = "length") %>%
   mutate(romance_count = sum(romance, na.rm = TRUE)) %>%
   mutate(relative_frequency = romance_count / length) %>%
-  select(gender, author, title, relative_frequency) %>%
+  select(gender, author, title, relative_frequency) %>% 
   distinct()
                           
 ```

@@ -433,31 +433,14 @@ entities_matches_sentiment <- entities_unnest %>%
   distinct_at(vars(-word))  
   
 ```
-
-```{r}
-average_sentiment <- entities_matches_sentiment %>% 
-                       group_by(author, title, kind, words) %>% 
-  summarise(across(anger:sentiment, mean))
-```
-
-```{r}
-average_location_sentiment <- average_sentiment %>% 
-                              filter(kind == "location")
-```
-
-```{r}
-
-```
-
-
 #### Final tally
 
-Sum the table by total sentiment for author, title, and words.
+Sum the table by total sentiment for author, title, and words. Add an `appearance` column to keep track of how often a character actually occurs.
 
 ```{r message=FALSE}
 ner_total_sentiment <- entities_matches_sentiment %>%
   group_by(author, title, words, kind) %>%
-  summarise(total = mean(sentiment))  
+  summarise(total = mean(sentiment), appearance = n())  
 ```
 
 ## Part 6: Visualization
@@ -472,7 +455,7 @@ We can chart the top 10 characters based on their positive sentiment. Note that 
 ner_total_sentiment %>%
   group_by(title) %>%
   filter(kind == "person") %>%
-  top_n(10) %>%
+  top_n(total, n=10) %>%
   mutate(words = reorder(words, total)) %>%
   ggplot(aes(words, y = total, fill = title)) +
   geom_col() +
@@ -487,13 +470,31 @@ We can also map out the bottom ten by reversing the top_n to a negative number t
 ner_total_sentiment %>%
   group_by(title) %>%
   filter(kind == "person") %>%
-  top_n(-10) %>%
+  top_n(total, -10) %>%
   mutate(words = reorder(words, (desc(total)))) %>%
   ggplot(aes(words, y = total, fill = title)) +
   geom_col() +
   facet_wrap(~ title, scales = "free") +
   coord_flip()
 ```
+
+#### Chart of top characters by appearance
+
+The above sentiment tends to favor the more minor characters, who appear less often and therefore their emotion is evened out less. We can also figure out the emotions of the main characters.
+
+```{r top_character_emotion}
+ner_total_sentiment %>%
+  group_by(title) %>%
+  filter(kind == "person") %>%
+  top_n(appearance, n=10) %>%
+  mutate(words = reorder(words, appearance)) %>%
+  ggplot(aes(words, y = total, fill = title)) +
+  geom_col() +
+  facet_wrap(~ title, scales = "free") +
+  coord_flip()
+
+```
+
 
 
 ### Individual sentiments
