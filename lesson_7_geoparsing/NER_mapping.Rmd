@@ -1,0 +1,302 @@
+---
+title: "NER and Mapping"
+author: "Joost Burgers"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: rmdformats::robobook
+---
+
+
+```{r settings}
+knitr::opts_chunk$set(echo= TRUE, message = FALSE, error=FALSE)
+```
+
+#### More libraries
+
+```{r load_libraries}
+library(dplyr)
+library(readr)
+library(tidygeocoder)
+library(tidyr)
+library(leaflet)
+library(rmdformats)
+```
+
+
+## Part 1: Introduction
+
+Thus far we've managed to take a corpus from gutenberg, gotten sense of the word frequencies (lesson 1), inferred the sentiments (lesson 4), extracted entities and attached sentiments (lesson 6). Now, we can keep adding to our data model by locating the text in space through the locations. This basic work flow of ingest, analyze, model, iterate is one that will become familiar to you throughout the semester. It is a bit different than a traditional literary studies model where the work flow is less explicit and feels more linear. The take away is that you should start to feel comfortable with revisiting the data many times, and constantly adding to it by attaching other data tables or making changes within the data table. 
+
+### Geoparsing
+
+The process of extracting locations from a text and mapping them onto real world coordinates is called geoparsing. Generally, this process is done in one fell swoop, as extracting locations is only really useful when they are mapped. There are a number of web services that will do this for you, but it costs money. Since, we already have the locations we don't have to go through this process. We can use the `tidygeopackage` to match location names with places on the earth. There are a number of systems you can use to access the geodata, but for our calculations we can use OpenStreetMaps `method = 'osm'`, which is free.
+
+#### Searching for locations
+
+We can search for a location by calling the function `geo()` and entering the arguments as below.
+
+
+```{r finding_cairo}
+cairo_geo <-
+  geo(
+    'Cairo',
+    method = 'osm',
+    full_results = TRUE,
+    custom_query = list(polygon_geojson = 1),
+    verbose = TRUE
+  )
+cairo_geo
+```
+Take a look at the information inside the variable. Notice that it found `Cairo, Egypt` and gave us the location along with some other useful metadata like bounding geometry.
+
+
+##### Sonepat or Sonipat
+
+Run the search algorithm and see what coordinates it produces for Sonepat and Sonipat.
+
+
+```{r sonepat}
+sonepat_geo <-
+  geo(
+    'Sonepat',
+    method = 'osm',
+    full_results = TRUE,
+    custom_query = list(polygon_geojson = 1),
+    verbose = TRUE
+  )
+```
+
+
+```{r sonipat}
+sonipat_geo <-
+  geo(
+    'Sonipat',
+    method = 'osm',
+    full_results = TRUE,
+    custom_query = list(polygon_geojson = 1),
+    verbose = TRUE
+  )
+```
+
+Results: 
+
+- Sonepat: LAT 28.99197 LONG 77.03426
+
+- Sonipat: LAT 29.00331 LONG 77.01673
+
+Note that the numbers are pretty close, but Sonipat is slightly more north and east, versus Sonepat. If you are wondering how I know this, I just plugged the coordinates into Google maps!
+
+Small differences like these are not all that consequential at scale. Yet, if you were searching for a specific place this mismatch could ruin your day.
+
+#### Making it harder
+
+What place do we expect to find in the query below?
+
+```{r hyderabad}
+hyderabad_geo <-
+  geo(
+    'Hyderabad',
+    method = 'osm',
+    full_results = TRUE,
+    custom_query = list(polygon_geojson = 1),
+    verbose = TRUE
+  )
+```
+
+But what if we really meant Hyderabad in Pakistan? We have to help out.
+
+```{r hyderabad_pakistan}
+hyderabad_pak_geo <-
+  geo(
+    'Hyderabad, Pakistan',
+    method = 'osm',
+    full_results = TRUE,
+    custom_query = list(polygon_geojson = 1),
+    verbose = TRUE
+  )
+```
+
+What place might it locate with the following search?
+
+
+```{r lyallpur}
+lyallpur_geo <- geo(
+  'Lyallpur',
+  method = 'osm',
+  full_results = TRUE,
+  custom_query = list(polygon_geojson = 1),
+  verbose = TRUE
+)
+```
+
+Again, we can help out and hope we get lucky.
+
+
+```{r faisalabad}
+lyallpur_geo_pun <-
+  geo(
+    'Lyallpur, Punjab',
+    method = 'osm',
+    full_results = TRUE,
+    custom_query = list(polygon_geojson = 1),
+    verbose = TRUE
+  )
+```
+The basic story is that geoparsing works better when the information is more complete. It runs into real problems when it encounters historical places. This means, you guessed it, you'll have to clean up your data a bit in order to get better results. For the sheet below, I've taken the sentiment analysis of each location entity using `ncr` and created new columns `street`,`area`,`city`,`province`, and `country`. I've then tried to give specific geographical information. For example, rather than only saying `Cambridge`, I've said `Cambridge` and `Great Britain`, so as to separate it from the one in the US. The more information you give the geoparser, the more accurate it will be. 
+
+```{r import_entities}
+entity_data <-
+  read_csv("average_location_sentiment_tagged.csv", na = c ("", "NA")) 
+```
+
+## Part 2: Running the geocoder on extracted data
+
+### Prepping the data
+
+With the new columns created, we can concatenate all of the geographic hints into a search string for the available data. This will help the geocoder. The reason for calling it address is because that is the field that the geocoder returns, so it makes joining easy. 
+
+```{r create_address}
+entity_data_str <- entity_data %>%
+  unite(
+    "address",
+    area:country,
+    sep = ", ",
+    remove = FALSE,
+    na.rm = TRUE
+  )
+```
+
+#### Run the geocoder
+
+Like all great procedures in R this might take a while. Consider this your mindfulness moment.
+
+
+```{r run_geocode, cache=TRUE}
+entity_geo <-
+  geo(entity_data_str$address,
+      method = 'osm',
+      full_results = FALSE)
+
+entity_geo <- entity_geo %>%
+  drop_na()
+```
+
+#### Another join
+
+Now we attach the coordinates to our data table with an inner join and drop all na's.
+
+```{r add_sentiments, echo=TRUE}
+entity_sentiment_geo <- entity_data_str %>%
+  inner_join(entity_geo)
+```
+## Part 3: Time to make some maps!
+
+For our mapping, we will be using Leaflet. This is common web-mapping tool. It is very simple, and limited in its implementation. Still, it's a good place to start. We'll make more advanced maps later in the course.
+
+We can make a very simple map by just plugging in the data and the columns where the lat and long are located.
+```{r basic_map}
+leaflet(entity_sentiment_geo) %>% addTiles() %>%
+  addCircles(lng = ~ long,
+             lat = ~ lat,
+             weight = 10)
+```
+
+Great we now know that a lot of the corpus takes place in London. We knew that already, but now we know the locations. Since we know where we want to look, we can set the map to open on London.
+
+#### Changing mapview
+```{r change_view}
+leaflet(entity_sentiment_geo) %>% addTiles() %>%
+  setView(-0.12764740, 51.50732, zoom = 12) %>%
+  addCircles(lng = ~ long,
+             lat = ~ lat,
+             weight = 10)
+```
+
+#### Styling symbols
+
+Now we want to style those circles. Let's figure out where in London people are the angriest. We can create a color palette, then use that as the color for anger (red).
+
+```{r style_symbols}
+#Create a palette
+pal <- colorNumeric(palette = "Reds",
+                    domain = entity_sentiment_geo$anger)
+
+#set the map
+map <- leaflet(entity_sentiment_geo) %>% addTiles() %>%
+  setView(-0.12764740, 51.50732, zoom = 13)
+
+map %>%
+  addCircles(
+    lng = ~ long,
+    lat = ~ lat,
+    weight = 30,
+    color = ~ pal(anger)
+  ) 
+```
+
+#### Changing symbol size by weight
+
+Those circles are a bit hard to see. Let's weight them by the count of the anger by setting them as the `weight` value.
+
+```{r change_weight}
+#Create a palette
+pal <- colorNumeric(palette = "Reds",
+                    domain = entity_sentiment_geo$anger)
+#set the map
+map <- leaflet(entity_sentiment_geo) %>% addTiles() %>%
+  setView(-0.12764740, 51.50732, zoom = 13)
+
+map %>%
+  addCircles(
+    lng = ~ long,
+    lat = ~ lat,
+    weight = ~ anger * 7,
+    popup = ~ anger,
+    color = ~ pal(anger)
+  ) 
+```
+
+#### Changing the basemap
+
+This still looks confusing. We can also change the basemap (the underlying map). Generally, when doing thematic mapping you want a muted background to contrast the data. We can also pop in a legend with the `addLegend` function.
+
+```{r change_basemap}
+pal <- colorNumeric(palette = "Reds",
+                    domain = entity_sentiment_geo$anger)
+
+#set the map
+map <- leaflet(entity_sentiment_geo) %>% addTiles() %>%
+  setView(-0.12764740, 51.50732, zoom = 13) %>%
+  addProviderTiles(providers$CartoDB.Positron)
+
+map %>%
+  addCircles(
+    lng = ~ long,
+    lat = ~ lat,
+    weight = ~ anger * 7,
+    fillOpacity = 0.7,
+    popup = ~ words,
+    color = ~ pal(anger)
+  ) %>%
+  addLegend(
+    "bottomright",
+    pal = pal,
+    values = ~ anger,
+    title = "Level of Anger",
+    opacity = 1
+  )
+```
+
+There's a couple more features and extensions you can use to jazz up the maps. The full instructions are here:
+
+https://rstudio.github.io/leaflet/
+
+## Part 4: Styling your output
+
+You may notice that when you knit this document, the output looks a bit nicer than the standard HTML output. This is because I loaded a style library called: `rmdformats`. Essentially, this takes all of the formatting of the page and adds a new style sheet to it. You can select a style sheet by changing the `output` line in the YAML header:
+
+>Replace `output: html_document` with `output:rmdformats::robobook` or `rmdformats::material` to change the style. 
+
+There are several different style libraries out there that make changing the output a breeze. Here is a good collection of several useful ones [R markdown themes](https://www.datadreaming.org/post/r-markdown-theme-gallery/).
+
+
+

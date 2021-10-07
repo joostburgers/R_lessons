@@ -431,7 +431,24 @@ Now recombine the columns of sentiments with the original entities, and drop the
 entities_matches_sentiment <- entities_unnest %>%
   inner_join(entities_sentiment) %>%
   distinct_at(vars(-word))  
+  
 ```
+
+```{r}
+average_sentiment <- entities_matches_sentiment %>% 
+                       group_by(author, title, kind, words) %>% 
+  summarise(across(anger:sentiment, mean))
+```
+
+```{r}
+average_location_sentiment <- average_sentiment %>% 
+                              filter(kind == "location")
+```
+
+```{r}
+
+```
+
 
 #### Final tally
 
@@ -538,3 +555,17 @@ ggRadar(
   legend.position = "right"
 )
 ```
+
+#### Generate files for mapping
+
+```{r addendum}
+average_sentiment <- entities_matches_sentiment %>% 
+                       group_by(author, title, kind, words) %>% 
+                      summarise(across(anger:sentiment, mean))
+
+average_location_sentiment <- average_sentiment %>% 
+                              filter(kind == "location")
+
+write_csv(average_location_sentiment, "average_location_sentiment.csv")
+```
+

@@ -1,0 +1,72 @@
+author,title,kind,street,area,city,province,country,words,anger,anticipation,disgust,fear,joy,negative,positive,sadness,surprise,trust,sentiment
+"Dickens, Charles",A Tale of Two Cities,location,,,,,United States of America,America,0.666666667,3,2,0.666666667,4.333333333,7.333333333,15.66666667,0.666666667,0,10.33333333,8.333333333
+"Dickens, Charles",A Tale of Two Cities,location,,,,,Great Britain,Britain,0,6,0,0,3,3,9,0,0,3,6
+"Dickens, Charles",A Tale of Two Cities,location,,,Cambridge,,Great Britain,Cambridge,6,3,6,6,0,6,0,0,0,3,-6
+"Dickens, Charles",A Tale of Two Cities,location,,,,,Canada,Canada,0,8,4,0,12,20,44,0,0,28,24
+"Dickens, Charles",A Tale of Two Cities,location,,Clerkenwell,London,,Great Britain,Clerkenwell,1,4,1,1,3,1,9.666666667,0,4,3,8.666666667
+"Dickens, Charles",A Tale of Two Cities,location,,,,,,Concord,0.142857143,1.142857143,0,0.285714286,0.285714286,0.857142857,2.285714286,0.571428571,0.285714286,1.857142857,1.428571429
+"Dickens, Charles",A Tale of Two Cities,location,,,Dover,,Great Britain,Dover,0.6,3.4,0.133333333,1.066666667,0.866666667,1.333333333,3.333333333,0.4,0.466666667,2.266666667,2
+"Dickens, Charles",A Tale of Two Cities,location,,,,,,East,1.180722892,1.325301205,0.819277108,1.481927711,0.903614458,2.759036145,3.325301205,1.602409639,0.698795181,2.144578313,0.56626506
+"Dickens, Charles",A Tale of Two Cities,location,,,,,England,England,0.766666667,1.466666667,0.8,1.066666667,1.1,2.2,3.4,0.933333333,0.633333333,2.533333333,1.2
+"Dickens, Charles",A Tale of Two Cities,location,,,,,Europe,Europe,6,3,6,6,0,6,0,0,0,3,-6
+"Dickens, Charles",A Tale of Two Cities,location,,,,,France,France,1.56,1.66,1.24,1.78,1.28,3.34,3.22,2.2,0.84,2.12,-0.12
+"Dickens, Charles",A Tale of Two Cities,location,,,,,Greece,Greece,0,6,0,0,3,3,9,0,0,3,6
+"Dickens, Charles",A Tale of Two Cities,location,,,London,,Great Britain,London,1.136363636,2.363636364,0.772727273,1.954545455,2.090909091,1.909090909,5.136363636,1.409090909,1.318181818,3.590909091,3.227272727
+"Dickens, Charles",A Tale of Two Cities,location,,,,,North America,North America,0,8,4,0,12,20,44,0,0,28,24
+"Dickens, Charles",A Tale of Two Cities,location,,,,,,North Tower,0.9,0,0.6,0.8,0.1,1.2,1.6,0.9,0,0.2,0.4
+"Dickens, Charles",A Tale of Two Cities,location,,,,,Norway,Norway,4,4,4,6,0,8,6,6,2,4,-2
+"Dickens, Charles",A Tale of Two Cities,location,Notre Dame,,Paris,,France,Notre Dame,2.333333333,3,2.666666667,2,3,5,8.333333333,3,2,4.333333333,3.333333333
+"Dickens, Charles",A Tale of Two Cities,location,,,Paris,,France,Paris,1.403225806,1.677419355,0.774193548,1.822580645,1.467741935,2.612903226,4.112903226,1.774193548,0.693548387,2.983870968,1.5
+"Dickens, Charles",A Tale of Two Cities,location,,,Rome,,Italy,Rome,0,2.333333333,0.666666667,0,1,2,4,0,0,1,2
+"Dickens, Charles",A Tale of Two Cities,location,,Saint Antoine Quarter,Paris,,France,Saint Antoine Quarter,2.285714286,4.163265306,1.326530612,3.326530612,3.918367347,4.510204082,6.693877551,2.408163265,3.87755102,6,2.183673469
+"Dickens, Charles",A Tale of Two Cities,location,,Saint Germain Quarter,Paris,,France,Saint Germain Quarter,0,3,0,0,6,0,6,0,3,9,6
+"Dickens, Charles",A Tale of Two Cities,location,,Saint Pancra,London,,Great Britain,Saint Pancras,0,7,0,3,7,2,7,3,4,6,5
+"Dickens, Charles",A Tale of Two Cities,location,,Saint Paul,London,,Great Britain,Saint Paul,0,6,0,0,6,0,12,0,6,6,12
+"Dickens, Charles",A Tale of Two Cities,location,,Soho,London,,Great Britain,Soho,1.117647059,3,0.470588235,0.823529412,2.764705882,1.705882353,8.058823529,1.882352941,0.705882353,5.411764706,6.352941176
+"Dickens, Charles",A Tale of Two Cities,location,,,,,,South Sea,1,0,0,1,0,2,2,0,0,0,0
+"Dickens, Charles",A Tale of Two Cities,location,,,,,,Temple,1.055555556,1.333333333,0.722222222,1.166666667,0.944444444,2.611111111,2.888888889,1.277777778,0.5,3.277777778,0.277777778
+"Dickens, Charles",A Tale of Two Cities,location,,Temple Bar,London,,Great Britain,Temple Bar,0.833333333,1.166666667,0.666666667,0.75,1,2.333333333,3.333333333,0.833333333,0.75,4.333333333,1
+"Dickens, Charles",A Tale of Two Cities,location,,Temple Court,London,,Great Britain,Temple Court,4,2,2,4,0,6,0,6,0,0,-6
+"Dickens, Charles",A Tale of Two Cities,location,,,Washington,,United States of America,Washington,1.5,1.5,0.5,2.5,1.5,3.5,4,1,0.5,3,0.5
+"Dickens, Charles",A Tale of Two Cities,location,,Westminster,London,,Great Britain,Westminster,4.5,3.5,6,6,2,10.5,3.5,6,1,1.5,-7
+"Dickens, Charles",A Tale of Two Cities,location,,Westminster Hall,London,,Great Britain,Westminster Hall,9,3,12,12,0,21,3,12,0,3,-18
+"Dickens, Charles",Great Expectations,location,,,,,United States of America,America,1,1,0,1,1,4,5,3,1,1,1
+"Dickens, Charles",Great Expectations,location,,,Athens,,Greece,Athens,0,0,0,0,0,3,0,0,0,0,-3
+"Dickens, Charles",Great Expectations,location,,,,,,Biddy,1.282208589,1.779141104,0.877300613,1.576687117,1.668711656,2.533742331,4.705521472,1.852760736,0.668711656,2.245398773,2.171779141
+"Dickens, Charles",Great Expectations,location,,Botany Bay,Kent,,Great Britain,Botany Bay,0,1,0,0,1,0,1,0,0,1,1
+"Dickens, Charles",Great Expectations,location,,,,,Great Britain,Britain,0,1.384615385,0,0.692307692,0.538461538,0.461538462,2.846153846,0.153846154,0.153846154,3.384615385,2.384615385
+"Dickens, Charles",Great Expectations,location,,,Cairo,,Egypt,Cairo,3,6,3,6,3,6,6,3,3,0,0
+"Dickens, Charles",Great Expectations,location,,Camberwell Green,London,,Great Britain,Camberwell Green,0,0,0,1.5,3,3,3,3,1.5,1.5,0
+"Dickens, Charles",Great Expectations,location,,Cambridge,London,,Great Britain,Cambridge,0,7,0,0,7,0,14,0,0,0,14
+"Dickens, Charles",Great Expectations,location,,,Canterbury,,Great Britain,Canterbury,4,0,4,4,8,28,24,8,4,16,-4
+"Dickens, Charles",Great Expectations,location,,Covent Garden,London,,Great Britain,Covent Garden,3.333333333,5.333333333,1.666666667,0.666666667,6,4,8.666666667,2.333333333,3.333333333,4,4.666666667
+"Dickens, Charles",Great Expectations,location,,,,,Denmark,Denmark,0.75,3.25,0.5,3.25,3,2.75,6.5,0.25,0,3,3.75
+"Dickens, Charles",Great Expectations,location,,,,,,East,0.928571429,1.119047619,0.5,1.214285714,0.988095238,1.904761905,2.107142857,1.05952381,0.654761905,1.392857143,0.202380952
+"Dickens, Charles",Great Expectations,location,,,,,England,England,0.636363636,0.454545455,0.181818182,0.818181818,0.090909091,1.363636364,1.272727273,0.363636364,0.272727273,0.454545455,-0.090909091
+"Dickens, Charles",Great Expectations,location,,,Essex,,Great Britain,Essex,0,0,0,0,0,1.333333333,5.333333333,1.666666667,0,2.666666667,4
+"Dickens, Charles",Great Expectations,location,Essex Street,,London,,Great Britain,Essex Street,0,0,0,0,0,2,8,1,0,4,6
+"Dickens, Charles",Great Expectations,location,,,,,Europe,Europe,0,3,3,3,3,6,6,0,0,0,0
+"Dickens, Charles",Great Expectations,location,,,,,France,France,0,0,0.5,0,0,1.5,0,0,0,0,-1.5
+"Dickens, Charles",Great Expectations,location,Gerrard Street,,London,,Great Britain,Gerrard Street,0.25,0,0,0.25,0.75,1.25,3,0.25,0.25,1,1.75
+"Dickens, Charles",Great Expectations,location,,,Gravesend,,Great Britain,Gravesend,0,0.333333333,0.333333333,0.333333333,0,1.666666667,0.333333333,2,0,0,-1.333333333
+"Dickens, Charles",Great Expectations,location,Greenwich,,London,,Great Britain,Greenwich,1,1,0,1,0,4.5,7,3.5,0,3.5,2.5
+"Dickens, Charles",Great Expectations,location,,,Hamburg,,Germany,Hamburg,0,1.6,0,0.4,1,0.4,1.4,0,0.8,1,1
+"Dickens, Charles",Great Expectations,location,,Hyde Park,London,,Great Britain,Hyde Park,0,0,0,0,0,0.5,0.5,0,0,1,0
+"Dickens, Charles",Great Expectations,location,,,,,India,India,2,1,1,1,0,2,1,2,1,0,-1
+"Dickens, Charles",Great Expectations,location,,,,,Kent,Kent,0,0,0,0,0,0,0,3,0,0,0
+"Dickens, Charles",Great Expectations,location,,,,,,Little Britain,0,1.384615385,0,0.692307692,0.538461538,0.461538462,2.846153846,0.153846154,0.153846154,3.384615385,2.384615385
+"Dickens, Charles",Great Expectations,location,,,London,,Great Britain,London,0.779661017,1.220338983,0.677966102,0.677966102,0.711864407,2.13559322,2.949152542,1.13559322,0.423728814,1.86440678,0.813559322
+"Dickens, Charles",Great Expectations,location,,,,,,Lunnon,0,0,2,1,0,2,1,0,0,0,-1
+"Dickens, Charles",Great Expectations,location,,,Marseilles,,France,Marseilles,0,3,0,3,3,0,3,0,0,0,3
+"Dickens, Charles",Great Expectations,location,,,,New South Wales,Australia,New South Wales,0.5,1.125,0,0.75,0.25,0.75,1.75,0,0.375,2,1
+"Dickens, Charles",Great Expectations,location,,,Paris,,France,Paris,1.888888889,4.111111111,0.333333333,6.666666667,3.333333333,10.88888889,4.333333333,7.777777778,1.111111111,4.666666667,-6.555555556
+"Dickens, Charles",Great Expectations,location,,,Portsmouth,,Great Britain,Portsmouth,0.75,1.75,0.25,1,1,1,2.25,0.75,0.5,1.25,1.25
+"Dickens, Charles",Great Expectations,location,,,Richmond,,Great Britain,Richmond,0.125,1,0,1.875,0.75,0.875,3.75,0.625,0.125,1.5,2.875
+"Dickens, Charles",Great Expectations,location,,Saint Paul,London,,Great Britain,Saint Paul,3,3,1,2,2,3,3,2,2,3,0
+"Dickens, Charles",Great Expectations,location,,,,,,Spider,0.5,1.7,1.9,1.5,0.5,0.9,1.8,0.2,0,1.2,0.9
+"Dickens, Charles",Great Expectations,location,,,,,,Temple,0.4375,0.6875,0.375,0.8125,0.5625,1.4375,2.3125,0.5,0.3125,1.625,0.875
+"Dickens, Charles",Great Expectations,location,,Temple Gardens,London,,Great Britain,Temple Gardens,0,0,0,4,0,0,0,0,0,4,0
+"Dickens, Charles",Great Expectations,location,,,,,,Westminster,0,4,0,0,4,0,4,0,0,4,4
+"Dickens, Charles",Great Expectations,location,,Westminster Abbey,London,,Great Britain,Westminster Abbey,0,4,0,0,4,0,4,0,0,4,4
+"Dickens, Charles",Great Expectations,location,,Windsor,London,,Great Britain,Windsor,3,6,3,3,6,3,18,3,3,9,15
+"Dickens, Charles",Great Expectations,location,Wood Street,,London,,Great Britain,Wood Street,1,1.5,0,1.5,0,2.5,0,3,0,0.5,-2.5
