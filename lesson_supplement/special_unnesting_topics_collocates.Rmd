@@ -1,0 +1,153 @@
+---
+title: "Unnesting, Topics, and Collocates"
+author: "Johannes Burgers"
+date: "10/11/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+The following worked examples go through a number of issues that have arisen:
+
+- unnesting by paragraph
+- adding topics and sentiment by paragraph
+- finding collocates
+
+
+```{r load_libraries}
+library(tidytext)
+library(tidyverse)
+```
+
+```{r import_data}
+corpus <- read_csv("data/corpus.csv")
+```
+
+## Part 1: Unnesting
+
+### Unnesting by sentence
+
+The basic procedure is as follows: 
+- group the text by the author, date (if you have one), title, and then text. The summarise function will drop the text column in the grouping and maintain the other three.
+- Use summarise to "collapse" the texts into one long string.
+- Unnest the the sentences by end punctuation `.!?`
+- Now that you have all the sentences, take off the grouping
+- Give each sentences a unique number 
+- Group by author, data, title, and sentence_number to maintain columns
+- unnest by word
+
+```{r unnest_sentences_words}
+unnested_corpus_sentence <- corpus %>%
+  group_by(author, date, title, text) %>% #These variables should match your column headers
+  summarise (text = paste(text, collapse = "")) %>%
+  unnest_regex(sentences, text, pattern = "[.?!]", to_lower = FALSE) %>%
+  ungroup() %>%
+  mutate(sentence_number = row_number()) %>%
+  group_by(author, date, title, sentence_number) %>%
+  unnest_tokens(word, sentences)
+```
+
+### Special: paragraph unnesting
+
+In theory you should be able to repeat the same process as above for paragraph unnesting. That is unnest paragraphs, give them a line number and unnest again. The problem is that the Gutenberg data does not always do paragraphing well. In the example below, I've unnested by line and then given a paragraph number to each chunk of lines.
+
+```{r unnest_paragraphs_words}
+unnested__by_paragraph <- corpus %>%
+  group_by(author, date, title, text) %>%
+  unnest_paragraphs(paragraph, text, paragraph_break = "\n") %>%
+  ungroup() %>%
+  mutate(para_number = cumsum(paragraph == " ")) %>%
+  group_by(author, date, title, para_number) %>%
+  unnest_tokens(word, paragraph)
+```
+
+
+## Part 2: Adding sentiment and topic
+
+Below is a quicker way to add sentiment and topic in one fell swoop. It also maintains the paragraphs where there was a topic but no sentiment.
+
+### Intialize vocabulary
+Create topic vocabulary. Note that the vocabulary below is quite limited. You will need to be more robust in order to find more nuanced answers.
+
+```{r create_topic_words}
+romance_words <- c("love","romance", "romantic", "desire", "relationship", "couple")
+
+romance_df <- data_frame(word = romance_words, romance = TRUE)
+
+technology_words <- c("science", "technology", "rational", "rationality","thinking","progress")
+
+technology_df <- data_frame(word = technology_words, technology = TRUE)
+
+```
+
+
+### Join sentiments and topics
+You can add all of the variables at the same time by doing a `left_join()`. Left join keeps all the materials on the left and adds an `NA` if it does not occur on the right.
+
+
+```{r add_sentiment_topic}
+corpus_sentiment_topic <- unnested__by_paragraph %>%
+  left_join((get_sentiments("nrc"))) %>%
+  left_join(romance_df) %>%
+  left_join(technology_df) 
+```
+
+### Create no_sentiment variable
+
+We can use the `NA` created by the `left_join()` as a data point by indicating that there was `no_sentiment` for that word. Once we count everything, we won't lose `romance` and `technology` paragraphs that don't have sentiment.
+
+```{r sentiment_by_paragraph}
+sentiment_by_paragraph <-  corpus_sentiment_topic %>%
+  group_by (author, title, date, para_number) %>%
+  mutate(sentiment = if_else(is.na(sentiment), "no_sentiment", sentiment)) %>%
+  count(sentiment, romance, technology) %>%
+  pivot_wider(names_from = sentiment, values_from = n)
+```
+
+We can then create a third column where both `romance` and `technology` occur in the same paragraph. Unfortunately, that never happens with this corpus with the words provided. We still have a filtered table with all of the romance and technology words irrespective of the fact if there is sentiment in a paragraph. If this is not a useful value, drop it with `select(-no_sentiment)`
+
+```{r romance_technology}
+romance_technology <- sentiment_by_paragraph %>%
+  mutate(romance_technology = if_else(romance == TRUE &
+                                        technology == TRUE, TRUE, FALSE))  %>%
+  filter(romance == TRUE | technology == TRUE)
+```
+
+# Part 3: Finding topic collocates
+
+First, unnest the texts by ngram. You can set the ngram size by changing the `n=` to another number. Keep in mind though that the higher the n-gram, the less the likelihood you'll get phrases of a count more than one.
+
+
+```{r create_ngrams}
+corpus_ngram <- corpus %>% 
+                group_by(author, title, date, text) %>% 
+                unnest_ngrams(ngram,text,n=2) #change this number to get more of fewer words
+
+```
+
+Count the number of n-grams. **Warning** This may take a while.
+
+```{r ngram_count}
+ngram_count <- corpus_ngram %>% 
+                count(ngram)
+```
+
+Filter out the ngrams with romance words. The function `str_detect` looks for any of the words in the vector `romance_df$word`in the ngram.
+
+```{r filter_romance, warning=FALSE}
+romance_ngrams <- ngram_count %>% 
+                  filter(str_detect(ngram,romance_df$word)) 
+```
+
+Optional: Clean up ngrams by filtering out only duplicates and arranging them
+
+```{r clean_ngrams}
+romance_ngrams_clean <- romance_ngrams %>% 
+                        filter(n>1)%>% 
+                  arrange(title, desc(n))
+```
+

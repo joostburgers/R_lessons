@@ -298,5 +298,8 @@ You may notice that when you knit this document, the output looks a bit nicer th
 
 There are several different style libraries out there that make changing the output a breeze. Here is a good collection of several useful ones [R markdown themes](https://www.datadreaming.org/post/r-markdown-theme-gallery/).
 
+```{r}
+
+```
 
 
